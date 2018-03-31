@@ -7,16 +7,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
+import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 import com.wynprice.modjam5.WorldPaint;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @EventBusSubscriber(modid=WorldPaint.MODID)
 public class WorldColorsHandler {
@@ -37,7 +47,6 @@ public class WorldColorsHandler {
 	
 	@SubscribeEvent
 	public static void load(WorldEvent.Load event) {
-		System.out.println(SAVELOCAION);
 		if(event.getWorld().isRemote) return;
 		try {
 			NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(SAVELOCAION));
@@ -52,11 +61,50 @@ public class WorldColorsHandler {
 		}
 	}
 	
-	public static void putColor(int dim, BlockPos pos, DataInfomation info) {
+	private static int tickCounter;
+	
+	@SubscribeEvent
+	public static void onWorldTick(WorldTickEvent event) {
+		if(event.world == null || event.world.provider == null || event.type == Type.SERVER || tickCounter++ % 20 != 0 && colorMap.containsKey(event.world.provider.getDimension())) return;
+		Random rand = new Random();
+		HashMap<BlockPos, DataInfomation> innerMap = colorMap.get(event.world.provider.getDimension());
+		ArrayList<Tuple<Tuple<Integer, BlockPos>, DataInfomation>> appendList = new ArrayList<>();
+		if(innerMap != null) {
+			for(BlockPos pos : innerMap.keySet()) {
+				DataInfomation info = innerMap.get(pos);
+				if(info.isSpreadable() && Math.sqrt(info.getOrigin().distanceSq(pos)) < 25 && rand.nextFloat() < 0.5f) {//TODO change to config
+					EnumFacing facing = EnumFacing.getFront(rand.nextInt());
+					appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(),  pos.offset(facing)), new DataInfomation(info.getColor(), info.isSpreadable(), info.getOrigin())));
+				}
+			}
+		}
+		
+		for(Tuple<Tuple<Integer, BlockPos>, DataInfomation> tuple : appendList) {
+			putInfo(tuple.getFirst().getFirst(), tuple.getFirst().getSecond(), tuple.getSecond());
+		}
+	}
+	
+	public static void putInfo(int dim, BlockPos pos, DataInfomation info) {
 		pos = new BlockPos(pos); //Make sure not mutatable
-		HashMap<BlockPos, DataInfomation> innerMap = colorMap.containsKey(dim) ? new HashMap<>() : colorMap.get(dim);
+		HashMap<BlockPos, DataInfomation> innerMap = colorMap.get(dim);
+		if(innerMap == null) {
+			innerMap = new HashMap<>();
+		}
 		innerMap.put(pos, info);
 		colorMap.put(dim, innerMap);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static DataInfomation getInfo(BlockPos pos) {
+		World world = Minecraft.getMinecraft().world;
+		if(world != null) {
+			return getInfo(world.provider.getDimension(), pos);
+		}
+		return DataInfomation.DEFAULT;
+	}
+	
+	public static DataInfomation getInfo(int dim, BlockPos pos) {
+		return colorMap.containsKey(dim) && colorMap.get(dim).containsKey(pos) ? colorMap.get(dim).get(pos) : DataInfomation.DEFAULT;
 	}
 	
 	public static NBTTagCompound saveToNBT()
@@ -85,9 +133,16 @@ public class WorldColorsHandler {
 				blockPositions[index++] = pos.getX();
 				blockPositions[index++] = pos.getY();
 				blockPositions[index++] = pos.getZ();
-				nbt_data.setInteger("color", energized_map.get(i).get(pos).getColor());
-				nbt_data.setBoolean("doesSpread", energized_map.get(i).get(pos).isSpreadable());
 				
+				DataInfomation info = energized_map.get(i).get(pos);
+				
+				nbt_data.setInteger("color", info.getColor());
+				nbt_data.setBoolean("doesSpread", info.isSpreadable());
+				
+				nbt_data.setInteger("originPosX", info.getOrigin().getX());
+				nbt_data.setInteger("originPosY", info.getOrigin().getY());
+				nbt_data.setInteger("originPosZ", info.getOrigin().getZ());
+
 				nbt_world.setTag(String.valueOf(pos.getX()) + " " + String.valueOf(pos.getY()) + " " + String.valueOf(pos.getZ()), nbt_data);
 			}
 			nbt_world.setIntArray("blockpos", blockPositions);
@@ -114,18 +169,23 @@ public class WorldColorsHandler {
 				int posY = blockpos[i + 1];
 				int posZ = blockpos[i + 2];
 				NBTTagCompound nbt = nbt_world.getCompoundTag(posX + " " + posY + " " + posZ);
-				putColor(dimension, new BlockPos(posX, posY, posZ), new DataInfomation(nbt.getInteger("color"), nbt.getBoolean("doesSpread")));
+				putInfo(dimension, new BlockPos(posX, posY, posZ), new DataInfomation(nbt.getInteger("color"), nbt.getBoolean("doesSpread"), new BlockPos(nbt.getInteger("originPosX"), nbt.getInteger("originPosY"), nbt.getInteger("originPosZ"))));
 			}
 		}
 	}
 	
 	public static class DataInfomation {
+		
+		public static final DataInfomation DEFAULT = new DataInfomation(-1, false, BlockPos.ORIGIN);
+		
 		private final int color;
 		private final boolean isSpreadable;
+		private final BlockPos origin;
 		
-		public DataInfomation(int color, boolean isSpreadable) {
+		public DataInfomation(int color, boolean isSpreadable, BlockPos origin) {
 			this.color = color;
 			this.isSpreadable = isSpreadable;
+			this.origin = origin;
 		}
 		
 		public int getColor() {
@@ -134,6 +194,10 @@ public class WorldColorsHandler {
 		
 		public boolean isSpreadable() {
 			return isSpreadable;
+		}
+		
+		public BlockPos getOrigin() {
+			return origin;
 		}
 	}
 }
