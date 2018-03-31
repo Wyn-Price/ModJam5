@@ -1,6 +1,8 @@
 package com.wynprice.modjam5.common.registries;
 
 import com.wynprice.modjam5.WorldPaint;
+import com.wynprice.modjam5.common.items.ItemPainingBoots;
+import com.wynprice.modjam5.common.items.ItemThrowablePaint;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -18,24 +20,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldPaintItems {
 	
 	public static final Item COLORPICKER = null; //TODO 
+	public static final Item PAINTING_BOOTS = new ItemPainingBoots();
+	public static final Item THROWABLE_PAINT = new ItemThrowablePaint();
 	
 	@SubscribeEvent
-	public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
-		event.getRegistry().registerAll();
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		event.getRegistry().registerAll(PAINTING_BOOTS, THROWABLE_PAINT);
 	}
 	
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event) {
+		registerRenderForItems(PAINTING_BOOTS, THROWABLE_PAINT);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static void registerRenderForItems(Item... items) {
+		for(Item item : items) {
+			registerRenderForItem(item);
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static void registerRenderForItem(Block block) {
-		registerRenderForItem(block, (stack) -> new ModelResourceLocation(block.getRegistryName(), "inventory"));
+	private static void registerRenderForItem(Item item) {
+		registerRenderForItem(item, (stack) -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static void registerRenderForItem(Block block, ItemMeshDefinition definition) {
-		ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(block), definition);
+	private static void registerRenderForItem(Item item, ItemMeshDefinition definition) {
+		ModelLoader.setCustomMeshDefinition(item, definition);
 	}
 }

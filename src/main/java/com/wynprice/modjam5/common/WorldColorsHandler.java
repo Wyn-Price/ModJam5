@@ -20,6 +20,7 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -32,12 +33,13 @@ public class WorldColorsHandler {
 		event.addCapability(new ResourceLocation(WorldPaint.MODID, "colorProvider"), new CapabilityHandler.ColorCapabilityProvider());
 	}
 	
-	@SubscribeEvent
-	public static void onChunkWatch(ChunkWatchEvent.Watch event) {
-		WorldPaintNetwork.sendToPlayer(event.getPlayer(), new MessagePacketSyncChunk(event.getPlayer().world.getChunkFromChunkCoords(event.getChunk().x, event.getChunk().z)));
-	}
+//	@SubscribeEvent
+//	public static void onChunkWatch(ChunkEvent.Load event) {
+//		WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(event.getChunk()));
+//	}
 	
 	public static DataInfomation getInfo(World worldIn, BlockPos pos) {
+		if(worldIn == null) return DataInfomation.DEFAULT; //Not usually called
 		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
 		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
 		if(cap != null) {
@@ -115,6 +117,11 @@ public class WorldColorsHandler {
 		}
 	}
 	
+	/**
+	 * If youre hear to tell me how bad the capability is, I know. It works so im not touching it
+	 * @author Wyn Price
+	 *
+	 */
 	public static class CapabilityHandler {
 	
 		@CapabilityInject(IDataInfomationProvider.class)

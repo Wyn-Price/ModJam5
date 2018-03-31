@@ -89,6 +89,10 @@ public class WorldPaintHooks {
 	@SideOnly(Side.CLIENT)
 	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) { //Needed colorResolver to be string as the class is inaccessable
 		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
+		WorldColorsHandler.DataInfomation in = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, pos);
+		if(in != null && !in.isDefault() && !in.isSpreadable()) {
+			return in.getColor();
+		}
 		int i = 0;
 		int j = 0;
 		int k = 0;

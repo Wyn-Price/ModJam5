@@ -1,6 +1,7 @@
 package com.wynprice.modjam5.common.network;
 
 import com.wynprice.modjam5.WorldPaint;
+import com.wynprice.modjam5.common.network.packets.MessagePacketRequestCapability;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,7 @@ public class WorldPaintNetwork {
 	public static void preInit()
 	{
 		registerMessage(MessagePacketSyncChunk.class, Side.CLIENT);
+		registerMessage(MessagePacketRequestCapability.class, Side.SERVER);
 	}
 	
 	private static int idCount = -1;
