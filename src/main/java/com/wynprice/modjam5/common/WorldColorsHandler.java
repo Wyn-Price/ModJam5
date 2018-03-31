@@ -1,201 +1,76 @@
 package com.wynprice.modjam5.common;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
-import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 import com.wynprice.modjam5.WorldPaint;
+import com.wynprice.modjam5.common.network.WorldPaintNetwork;
+import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Tuple;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @EventBusSubscriber(modid=WorldPaint.MODID)
 public class WorldColorsHandler {
 	
-	private static HashMap<Integer, HashMap<BlockPos, DataInfomation>> colorMap = new HashMap<>();	
-	
-	public static final File SAVELOCAION = new File(FMLCommonHandler.instance().getSavesDirectory(), FMLCommonHandler.instance().getMinecraftServerInstance().getFolderName() + "/" + WorldPaint.MODID + "_data.dat");
-	
 	@SubscribeEvent
-	public static void save(WorldEvent.Save event) {
-		if(event.getWorld().isRemote) return;		
-		try {
-			CompressedStreamTools.writeCompressed(saveToNBT(), new FileOutputStream(SAVELOCAION));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public static void chunkRegistry(AttachCapabilitiesEvent<Chunk> event) {
+		event.addCapability(new ResourceLocation(WorldPaint.MODID, "colorProvider"), new CapabilityHandler.ColorCapabilityProvider());
 	}
 	
 	@SubscribeEvent
-	public static void load(WorldEvent.Load event) {
-		if(event.getWorld().isRemote) return;
-		try {
-			NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(SAVELOCAION));
-			if(nbt != null)
-				readFromNBT(nbt);
-		} catch (FileNotFoundException e) {
-			save(new WorldEvent.Save(event.getWorld())); //Create a anew file
-		}
-		catch (IOException e)  {
-			e.printStackTrace();
-			return;
-		}
+	public static void onChunkWatch(ChunkWatchEvent.Watch event) {
+		WorldPaintNetwork.sendToPlayer(event.getPlayer(), new MessagePacketSyncChunk(event.getPlayer().world.getChunkFromChunkCoords(event.getChunk().x, event.getChunk().z)));
 	}
 	
-	private static int tickCounter;
-	
-	@SubscribeEvent
-	public static void onWorldTick(WorldTickEvent event) {
-		if(event.world == null || event.world.provider == null || tickCounter++ % 100 != 0 || !colorMap.containsKey(event.world.provider.getDimension())) return;
-		Random rand = new Random();
-		HashMap<BlockPos, DataInfomation> innerMap = colorMap.get(event.world.provider.getDimension());
-		ArrayList<Tuple<Tuple<Integer, BlockPos>, DataInfomation>> appendList = new ArrayList<>();
-
-		if(false)
-		if(!event.world.playerEntities.isEmpty())
-			appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(), event.world.playerEntities.get(0).getPosition()), new DataInfomation(0xBF2312, true, event.world.playerEntities.get(0).getPosition())));
-		if(innerMap != null) {
-			for(BlockPos pos : innerMap.keySet()) {
-				if(!event.world.isBlockLoaded(pos)) continue;
-				DataInfomation info = innerMap.get(pos);
-				if(info.isSpreadable() && Math.sqrt(info.getOrigin().distanceSq(pos)) < 25 && rand.nextFloat() < 0.05f) {//TODO change to config
-					EnumFacing facing = EnumFacing.getFront(rand.nextInt());
-					if(!colorMap.containsKey(event.world.provider.getDimension()) || !colorMap.get(event.world.provider.getDimension()).containsKey(pos.offset(facing))) {
-						appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(),  pos.offset(facing)), new DataInfomation(info.getColor(), info.isSpreadable(), info.getOrigin())));
-					}
-				}
-			}
-		}
-		
-		
-		if(Minecraft.getMinecraft().world != null)
-		for(Tuple<Tuple<Integer, BlockPos>, DataInfomation> tuple : appendList) {
-			putInfo(tuple.getFirst().getFirst(), tuple.getFirst().getSecond(), tuple.getSecond());
-			Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(tuple.getFirst().getSecond(), tuple.getFirst().getSecond());
-		}
-	}
-	
-	public static void putInfo(int dim, BlockPos pos, DataInfomation info) {
-		pos = new BlockPos(pos); //Make sure not mutatable
-		HashMap<BlockPos, DataInfomation> innerMap = colorMap.get(dim);
-		if(innerMap == null) {
-			innerMap = new HashMap<>();
-		}
-		innerMap.put(pos, info);
-		colorMap.put(dim, innerMap);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static DataInfomation getInfo(BlockPos pos) {
-		World world = Minecraft.getMinecraft().world;
-		if(world != null) {
-			return getInfo(world.provider.getDimension(), pos);
+	public static DataInfomation getInfo(World worldIn, BlockPos pos) {
+		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
+		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
+		if(cap != null) {
+			DataInfomation info = cap.getMap().get(pos);
+			return info == null ? DataInfomation.DEFAULT : info;
 		}
 		return DataInfomation.DEFAULT;
 	}
 	
-	public static DataInfomation getInfo(int dim, BlockPos pos) {
-		return colorMap.containsKey(dim) && colorMap.get(dim).containsKey(pos) ? colorMap.get(dim).get(pos) : DataInfomation.DEFAULT;
-	}
-	
-	public static NBTTagCompound saveToNBT()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTTagCompound nbt_info = new NBTTagCompound();
-		NBTTagCompound nbt_worlds = new NBTTagCompound();
-		HashMap<Integer, HashMap<BlockPos, DataInfomation>> energized_map = colorMap;
-		int[] dimensions = new int[energized_map.size()];
-		for(int i = 0; i < dimensions.length; i++)
-			dimensions[i] = (int) energized_map.keySet().toArray()[i];
-		nbt_info.setIntArray("dimensions", dimensions);
-		ArrayList<Integer> list = new ArrayList<>(energized_map.keySet());
-		for(int i : list)
-		{			
-			if(energized_map.get(i) == null)
-				continue;
-			
-			NBTTagCompound nbt_world = new NBTTagCompound();
-			int[] blockPositions = new int[energized_map.get(i).size() * 3];
-			int index = 0;
-			ArrayList<BlockPos> list1 = new ArrayList<>(energized_map.get(i).keySet());
-			for(BlockPos pos : list1)
-			{
-				NBTTagCompound nbt_data = new NBTTagCompound();
-				blockPositions[index++] = pos.getX();
-				blockPositions[index++] = pos.getY();
-				blockPositions[index++] = pos.getZ();
-				
-				DataInfomation info = energized_map.get(i).get(pos);
-				
-				nbt_data.setInteger("color", info.getColor());
-				nbt_data.setBoolean("doesSpread", info.isSpreadable());
-				
-				nbt_data.setInteger("originPosX", info.getOrigin().getX());
-				nbt_data.setInteger("originPosY", info.getOrigin().getY());
-				nbt_data.setInteger("originPosZ", info.getOrigin().getZ());
+	public static void putInfo(World worldIn, BlockPos pos, DataInfomation info) {
+		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
+		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
+		if(cap != null) {
+			cap.getMap().put(pos, info);
+			WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(worldIn.getChunkFromChunkCoords(chunk.x, chunk.z)));
 
-				nbt_world.setTag(String.valueOf(pos.getX()) + " " + String.valueOf(pos.getY()) + " " + String.valueOf(pos.getZ()), nbt_data);
-			}
-			nbt_world.setIntArray("blockpos", blockPositions);
-			nbt_worlds.setTag("dimension_" + String.valueOf(i), nbt_world);
-		}
-		
-		nbt.setTag("worlds", nbt_worlds);
-		nbt.setTag("info", nbt_info);
-		
-		return nbt;
-	}
-	
-	public static void readFromNBT(NBTTagCompound compound)
-	{
-		colorMap.clear();
-		NBTTagCompound world_info = compound.getCompoundTag("info");
-		for(int dimension : world_info.getIntArray("dimensions"))
-		{
-			NBTTagCompound nbt_world = compound.getCompoundTag("worlds").getCompoundTag("dimension_" + String.valueOf(dimension));
-			int[] blockpos = nbt_world.getIntArray("blockpos");
-			for(int i = 0; i < blockpos.length; i+=3)
-			{
-				int posX = blockpos[i];
-				int posY = blockpos[i + 1];
-				int posZ = blockpos[i + 2];
-				NBTTagCompound nbt = nbt_world.getCompoundTag(posX + " " + posY + " " + posZ);
-				putInfo(dimension, new BlockPos(posX, posY, posZ), new DataInfomation(nbt.getInteger("color"), nbt.getBoolean("doesSpread"), new BlockPos(nbt.getInteger("originPosX"), nbt.getInteger("originPosY"), nbt.getInteger("originPosZ"))));
-			}
 		}
 	}
 	
 	public static class DataInfomation {
-		
-		public static final DataInfomation DEFAULT = new DataInfomation(-1, false, BlockPos.ORIGIN);
+				
+		public static final DataInfomation DEFAULT = new DataInfomation(-1, false, BlockPos.ORIGIN, new int[0]);
 		
 		private final int color;
 		private final boolean isSpreadable;
 		private final BlockPos origin;
+		private final int[] spreadTo;
 		
-		public DataInfomation(int color, boolean isSpreadable, BlockPos origin) {
+		public DataInfomation(int color, boolean isSpreadable, BlockPos origin, int[] spreadTo) {
 			this.color = color;
 			this.isSpreadable = isSpreadable;
 			this.origin = origin;
+			this.spreadTo = spreadTo;
+
 		}
 		
 		public int getColor() {
@@ -205,9 +80,125 @@ public class WorldColorsHandler {
 		public boolean isSpreadable() {
 			return isSpreadable;
 		}
+
+		public final boolean isDefault() {
+			return this == DEFAULT;
+		}
 		
 		public BlockPos getOrigin() {
 			return origin;
 		}
+		
+		public int getX() {
+			return origin.getX();
+		}
+		
+		public int getY() {
+			return origin.getY();
+		}
+		
+		public int getZ() {
+			return origin.getZ();
+		}
+		
+		public int[] getSpreadTo() {
+			return spreadTo;
+		}
+	}
+	
+	public static class CapabilityHandler {
+	
+		@CapabilityInject(IDataInfomationProvider.class)
+	    public static Capability<IDataInfomationProvider> DATA_CAPABILITY = null;
+		
+		public static class ColorCapabilityProvider implements ICapabilitySerializable<NBTBase> {
+	
+			private final DefaultImpl defaultImpl = new DefaultImpl();
+			
+			@Override
+			public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+				if(capability == DATA_CAPABILITY) {
+					return true;
+				}
+				return false;
+			}
+	
+			@Override
+			public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+				if(capability == DATA_CAPABILITY) {
+					return (T) defaultImpl;
+				}
+				return null;
+			}
+
+			@Override
+			public NBTBase serializeNBT() {
+				return ColorStorage.INSTANCE.writeNBT(DATA_CAPABILITY, defaultImpl, EnumFacing.UP);
+			}
+
+			@Override
+			public void deserializeNBT(NBTBase nbt) {
+				ColorStorage.INSTANCE.readNBT(DATA_CAPABILITY, defaultImpl, EnumFacing.UP, nbt);
+
+			}
+			
+		}
+		
+		public static interface IDataInfomationProvider {
+			HashMap<BlockPos, DataInfomation> getMap();
+		}
+		
+		public static class DefaultImpl implements IDataInfomationProvider {
+			private final HashMap<BlockPos, DataInfomation> map = new HashMap<>();
+			
+			@Override
+			public HashMap<BlockPos, DataInfomation> getMap() {
+				return map;
+			}
+		}
+		
+		public static enum ColorStorage implements IStorage<IDataInfomationProvider> {
+			
+			INSTANCE;
+			
+			@Override
+			public NBTBase writeNBT(Capability<IDataInfomationProvider> capability, IDataInfomationProvider instance,
+					EnumFacing side) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				for(BlockPos pos : instance.getMap().keySet()) {
+					NBTTagCompound nbt_data = new NBTTagCompound();
+					DataInfomation info = instance.getMap().get(pos);
+					
+					nbt_data.setInteger("color", info.getColor());
+					nbt_data.setBoolean("doesSpread", info.isSpreadable());
+					
+					nbt_data.setInteger("originPosX", info.getX());
+					nbt_data.setInteger("originPosY", info.getY());
+					nbt_data.setInteger("originPosZ", info.getZ());
+					
+					nbt_data.setIntArray("spreadTo", info.getSpreadTo());
+					
+					nbt.setTag(pos.getX() + " " + pos.getY() + " " + pos.getZ(), nbt_data);
+				}
+				return nbt;
+			}
+
+			@Override
+			public void readNBT(Capability<IDataInfomationProvider> capability, IDataInfomationProvider instance,
+					EnumFacing side, NBTBase nbt) {
+	            NBTTagCompound tag = (NBTTagCompound) nbt;
+				for(String key : tag.getKeySet()) {
+					NBTTagCompound data = tag.getCompoundTag(key);
+					instance.getMap().put(new BlockPos(Integer.valueOf(key.split(" ")[0]), Integer.valueOf(key.split(" ")[1]), Integer.valueOf(key.split(" ")[2])),
+					new DataInfomation(
+							data.getInteger("color"), 
+							data.getBoolean("doesSpread"), 
+							new BlockPos(data.getInteger("originPosX"), data.getInteger("originPosY"), data.getInteger("originPosZ")), 
+							data.getIntArray("spreadTo")
+					));
+				}
+			}
+			
+		}	
 	}
 }

@@ -1,36 +1,103 @@
 package com.wynprice.modjam5.common.core;
 
 import java.awt.Color;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
+import org.apache.logging.log4j.core.net.Facility;
+
+import com.google.common.collect.Lists;
 import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.client.model.b3d.B3DModel.Face;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldPaintHooks {
-		
+	
+	public static ArrayList<Block> allowedBlocks = Lists.newArrayList(new Block[] {
+			Blocks.GRASS,
+			Blocks.DIRT,
+			
+			Blocks.LEAVES,
+			Blocks.LEAVES2,
+			
+			Blocks.LOG,
+			Blocks.LOG2,
+			
+			Blocks.WATER,
+			Blocks.FLOWING_WATER,
+			
+			Blocks.VINE,
+			Blocks.WATERLILY,
+			
+			Blocks.TALLGRASS,
+			Blocks.DOUBLE_PLANT,
+			Blocks.REEDS
+	});
+	
+	public static void onRandomTick(Block block, World worldIn, BlockPos pos, IBlockState state, Random rand) {
+		if(!allowedBlocks.contains(block)) return;
+		if(!worldIn.isRemote) {
+			DataInfomation info = WorldColorsHandler.getInfo(worldIn, pos);	
+			if(info.isSpreadable()) {
+				if(info.getSpreadTo().length >= EnumFacing.values().length) {
+					return;
+				}
+				ArrayList<EnumFacing> facing = new ArrayList<>();
+				for(EnumFacing face : EnumFacing.values()) {
+					if(!Lists.newArrayList(info.getSpreadTo()).contains(face.ordinal())) {
+						facing.add(face);
+					}
+				}
+				EnumFacing dir = facing.get(rand.nextInt(facing.size()));
+				if(dir.getAxis() == Axis.Y) {
+					pos = pos.offset(dir);
+					dir = EnumFacing.getHorizontal(rand.nextInt());
+				}
+				DataInfomation dirInfo = WorldColorsHandler.getInfo(worldIn, pos.offset(dir));
+				if(dirInfo.isDefault()) {
+					WorldColorsHandler.putInfo(worldIn, pos.offset(dir), info);
+					try {
+						Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(pos.offset(dir), pos.offset(dir));
+					} catch (NullPointerException e) {
+						;//TODO handle exceptions
+					}
+				}
+			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) { //Needed colorResolver to be string as the class is inaccessable
 		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
 		int i = 0;
 		int j = 0;
 		int k = 0;
-		
-		
 		int blend = 1; //TODO config
 		int defaultcol = 0x2D3FF4;
-		
-		boolean foundInfo = false;
 		int times = 0;
 		for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-blend, -blend, -blend), pos.add(blend, blend, blend)))
 		{
 			times++;
 			int l = resolver.getColorAtPos(blockAccess.getBiome(blockpos$mutableblockpos), blockpos$mutableblockpos);
-			WorldColorsHandler.DataInfomation info = WorldColorsHandler.getInfo(blockpos$mutableblockpos);
-			if(info != WorldColorsHandler.DataInfomation.DEFAULT) {
+			WorldColorsHandler.DataInfomation info = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, blockpos$mutableblockpos);
+			if(info == null) info = WorldColorsHandler.DataInfomation.DEFAULT;
+			if(!info.isDefault()) {
 				l = info.getColor();
 			} else if(type == 3) {
 				if(l != 0xFFFFFF) {
