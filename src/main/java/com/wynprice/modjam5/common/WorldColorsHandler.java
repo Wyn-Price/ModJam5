@@ -2,6 +2,7 @@ package com.wynprice.modjam5.common;
 
 import java.util.HashMap;
 
+import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
@@ -63,7 +64,7 @@ public class WorldColorsHandler {
 		private final int color;
 		private final boolean isSpreadable;
 		private final BlockPos origin;
-		private final int[] spreadTo;
+		private int[] spreadTo = new int[0];
 		
 		public DataInfomation(int color, boolean isSpreadable, BlockPos origin, int[] spreadTo) {
 			this.color = color;
@@ -103,6 +104,14 @@ public class WorldColorsHandler {
 		
 		public int[] getSpreadTo() {
 			return spreadTo;
+		}
+		
+		public void addFace(EnumFacing face) {
+			int[] aint = new int[this.spreadTo.length + 1];
+			for(int i = 0; i < this.spreadTo.length; i++) {
+				aint[i] = this.spreadTo[i];
+			}
+			aint[this.spreadTo.length] = face.getIndex();
 		}
 	}
 	

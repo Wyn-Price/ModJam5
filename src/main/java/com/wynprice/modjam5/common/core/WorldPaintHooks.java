@@ -60,11 +60,15 @@ public class WorldPaintHooks {
 				}
 				ArrayList<EnumFacing> facing = new ArrayList<>();
 				for(EnumFacing face : EnumFacing.values()) {
-					if(!Lists.newArrayList(info.getSpreadTo()).contains(face.ordinal())) {
+					if(!Lists.newArrayList(info.getSpreadTo()).contains(face.getIndex())) {
 						facing.add(face);
 					}
 				}
+				
 				EnumFacing dir = facing.get(rand.nextInt(facing.size()));
+				
+				info.addFace(dir);
+				
 				if(dir.getAxis() == Axis.Y) {
 					pos = pos.offset(dir);
 					dir = EnumFacing.getHorizontal(rand.nextInt());
