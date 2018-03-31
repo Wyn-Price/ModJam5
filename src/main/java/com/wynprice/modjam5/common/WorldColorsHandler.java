@@ -65,22 +65,32 @@ public class WorldColorsHandler {
 	
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
-		if(event.world == null || event.world.provider == null || event.type == Type.SERVER || tickCounter++ % 20 != 0 && colorMap.containsKey(event.world.provider.getDimension())) return;
+		if(event.world == null || event.world.provider == null || tickCounter++ % 100 != 0 || !colorMap.containsKey(event.world.provider.getDimension())) return;
 		Random rand = new Random();
 		HashMap<BlockPos, DataInfomation> innerMap = colorMap.get(event.world.provider.getDimension());
 		ArrayList<Tuple<Tuple<Integer, BlockPos>, DataInfomation>> appendList = new ArrayList<>();
+
+		if(false)
+		if(!event.world.playerEntities.isEmpty())
+			appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(), event.world.playerEntities.get(0).getPosition()), new DataInfomation(0xBF2312, true, event.world.playerEntities.get(0).getPosition())));
 		if(innerMap != null) {
 			for(BlockPos pos : innerMap.keySet()) {
+				if(!event.world.isBlockLoaded(pos)) continue;
 				DataInfomation info = innerMap.get(pos);
-				if(info.isSpreadable() && Math.sqrt(info.getOrigin().distanceSq(pos)) < 25 && rand.nextFloat() < 0.5f) {//TODO change to config
+				if(info.isSpreadable() && Math.sqrt(info.getOrigin().distanceSq(pos)) < 25 && rand.nextFloat() < 0.05f) {//TODO change to config
 					EnumFacing facing = EnumFacing.getFront(rand.nextInt());
-					appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(),  pos.offset(facing)), new DataInfomation(info.getColor(), info.isSpreadable(), info.getOrigin())));
+					if(!colorMap.containsKey(event.world.provider.getDimension()) || !colorMap.get(event.world.provider.getDimension()).containsKey(pos.offset(facing))) {
+						appendList.add(new Tuple<Tuple<Integer, BlockPos>, WorldColorsHandler.DataInfomation>(new Tuple(event.world.provider.getDimension(),  pos.offset(facing)), new DataInfomation(info.getColor(), info.isSpreadable(), info.getOrigin())));
+					}
 				}
 			}
 		}
 		
+		
+		if(Minecraft.getMinecraft().world != null)
 		for(Tuple<Tuple<Integer, BlockPos>, DataInfomation> tuple : appendList) {
 			putInfo(tuple.getFirst().getFirst(), tuple.getFirst().getSecond(), tuple.getSecond());
+			Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(tuple.getFirst().getSecond(), tuple.getFirst().getSecond());
 		}
 	}
 	
