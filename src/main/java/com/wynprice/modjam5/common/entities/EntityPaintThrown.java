@@ -28,7 +28,7 @@ public class EntityPaintThrown extends EntityThrowable {
         super(worldIn, throwerIn);
     }
     
-//    private int color;
+    private int color = 0xFFFFFF;
     
     @SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
@@ -47,6 +47,26 @@ public class EntityPaintThrown extends EntityThrowable {
 			this.setDead();
 			world.setEntityState(this, (byte)3);
         }
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
+		compound.setInteger("worldPaintColor", color);
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		this.color = compound.getInteger("worldPaintColor");
+	}
+	
+	public int getColor() {
+		return color;
+	}
+	
+	public void setColor(int color) {
+		this.color = color;
 	}
 	
 }

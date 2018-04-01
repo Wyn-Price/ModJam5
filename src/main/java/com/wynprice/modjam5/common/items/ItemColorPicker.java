@@ -33,4 +33,14 @@ public class ItemColorPicker extends Item {
 	private void openGUI(EnumHand hand,ItemStack stack) {
 		Minecraft.getMinecraft().displayGuiScreen(new GuiColorWheel(hand, stack));
 	}
+	
+	@Override
+	public boolean hasContainerItem(ItemStack stack) {
+		return true;
+	}
+	
+	@Override
+	public ItemStack getContainerItem(ItemStack itemStack) {
+		return itemStack.copy();
+	}
 }

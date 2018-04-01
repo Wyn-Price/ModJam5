@@ -122,7 +122,7 @@ public class WorldColorsHandler {
 	}
 	
 	/**
-	 * If youre hear to tell me how bad the capability is, I know. It works so im not touching it
+	 * If you're hear to tell me how bad the capability is, I know. It works so im not touching it
 	 * @author Wyn Price
 	 *
 	 */

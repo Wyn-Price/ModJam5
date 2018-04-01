@@ -1,6 +1,9 @@
 package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.common.entities.EntityPaintThrown;
+import com.wynprice.modjam5.common.network.WorldPaintNetwork;
+import com.wynprice.modjam5.common.network.packets.MessagePacketSyncEntity;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,9 +42,11 @@ public class ItemThrowablePaint extends Item
 
         if (!worldIn.isRemote)
         {
-            EntityPaintThrown entityPaintThrown = new   EntityPaintThrown(worldIn, playerIn);
+            EntityPaintThrown entityPaintThrown = new EntityPaintThrown(worldIn, playerIn);
             entityPaintThrown.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 1.5F, 1.0F);
+            entityPaintThrown.setColor(ColorUtils.getColor(itemstack));
             worldIn.spawnEntity(entityPaintThrown);
+            WorldPaintNetwork.sendToPlayersInWorld(worldIn, new MessagePacketSyncEntity(entityPaintThrown));
         }
 
         playerIn.addStat(StatList.getObjectUseStats(this));

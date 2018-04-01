@@ -14,7 +14,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 public class RecipePaintBoots extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 	
 	public RecipePaintBoots() {
-		setRegistryName(WorldPaint.MODID, "paintboots");
+		setRegistryName("paintboots");
 	}
 	
 	@Override

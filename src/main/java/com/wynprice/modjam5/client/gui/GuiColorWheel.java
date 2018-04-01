@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiSlider;
@@ -39,6 +40,14 @@ public class GuiColorWheel extends GuiScreen
 	{
 		this.stack = stack;
 		this.hand = hand;
+		
+		NBTTagCompound tag = stack.getOrCreateSubCompound("worldpaint");
+		if(tag.hasKey("pointX", 99) && tag.hasKey("pointY", 99)) {
+			this.currentColorWheel = new Point(Minecraft.getMinecraft().displayWidth / 2 + tag.getInteger("pointX"), Minecraft.getMinecraft().displayHeight / 2 + tag.getInteger("pointY"));
+			this.prevColor = ColorUtils.getColor(stack);
+		} else {
+			this.currentColorWheel = new Point(Minecraft.getMinecraft().displayWidth / 2, Minecraft.getMinecraft().displayHeight / 2);
+		}
 	}
 	
 	
@@ -46,7 +55,6 @@ public class GuiColorWheel extends GuiScreen
 	public void initGui() 
 	{
 		super.initGui();
-		this.currentColorWheel = new Point(Minecraft.getMinecraft().displayWidth / 2, Minecraft.getMinecraft().displayHeight / 2);
 	}
 	
 	@Override
@@ -92,7 +100,7 @@ public class GuiColorWheel extends GuiScreen
 	
 	@Override
 	public void onGuiClosed() {
-		WorldPaintNetwork.sendToServer(new MessagePacketColorGuiClosed(hand, prevColor));
+		WorldPaintNetwork.sendToServer(new MessagePacketColorGuiClosed(hand, prevColor, new Point(currentColorWheel.x - Minecraft.getMinecraft().displayWidth / 2, currentColorWheel.y - Minecraft.getMinecraft().displayHeight / 2)));
 		super.onGuiClosed();
 	}
 	
