@@ -66,58 +66,6 @@ public class WorldColorsHandler {
 			}
 		}
 	}
-	
-	public static void putInfoLargeRenderUpdate(World worldIn, HashMap<BlockPos, DataInfomation> map) {
-		if(map.isEmpty()) {
-			return;
-		}
-		HashMap<Chunk, Pair<ArrayList<BlockPos>, Pair<BlockPos, BlockPos>>> minMaxMap = new HashMap<>();
-		for(BlockPos pos : map.keySet()) {
-			Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
-			if(!minMaxMap.containsKey(chunk)) {
-				minMaxMap.put(chunk, Pair.of(Lists.newArrayList(pos), Pair.of(pos, pos)));
-			} else {
-				minMaxMap.get(chunk).getLeft().add(pos);
-				Pair<BlockPos, BlockPos> pairPos = minMaxMap.get(chunk).getRight();
-				BlockPos minBlockPos = pairPos.getLeft();
-				BlockPos maxBlockPos = pairPos.getRight();
-
-				if(pos.getX() < minBlockPos.getX()) {
-					minBlockPos = new BlockPos(pos.getX(), minBlockPos.getY(), minBlockPos.getZ());
-				}
-				if(pos.getY() < minBlockPos.getY()) {
-					minBlockPos = new BlockPos(minBlockPos.getX(), pos.getY(), minBlockPos.getZ());
-				}
-				if(pos.getZ() < minBlockPos.getZ()) {
-					minBlockPos = new BlockPos(minBlockPos.getX(), minBlockPos.getY(), pos.getZ());
-				}
-				
-				if(pos.getX() > maxBlockPos.getX()) {
-					maxBlockPos = new BlockPos(pos.getX(), maxBlockPos.getY(), maxBlockPos.getZ());
-				}
-				if(pos.getY() > maxBlockPos.getY()) {
-					maxBlockPos = new BlockPos(maxBlockPos.getX(), pos.getY(), maxBlockPos.getZ());
-				}
-				if(pos.getZ() > maxBlockPos.getZ()) {
-					maxBlockPos = new BlockPos(maxBlockPos.getX(), maxBlockPos.getY(), pos.getZ());
-				}
-				
-				minMaxMap.put(chunk, Pair.of(minMaxMap.get(chunk).getLeft(), Pair.of(minBlockPos, maxBlockPos)));
-			}
-		}
-		
-		
-		for(Chunk chunk : minMaxMap.keySet()) {
-			CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
-			if(cap != null) {
-				for(BlockPos pos : minMaxMap.get(chunk).getLeft()) {
-					cap.getMap().put(pos, map.get(pos));
-					WorldPaintNetwork.sendToPlayersInWorld(worldIn, new MessagePacketSyncChunk(chunk, minMaxMap.get(chunk).getRight().getLeft(), minMaxMap.get(chunk).getRight().getRight()));
-				}
-			}
-		}
-	
-	}
 		
 	public static class DataInfomation {
 				

@@ -45,23 +45,20 @@ public class EntityPaintThrown extends EntityThrowable {
 
 	@Override
 	protected void onImpact(RayTraceResult result) {
-		if (!this.world.isRemote)
-        {
-			this.setDead();
-			world.setEntityState(this, (byte)3);
-			HashMap<BlockPos, DataInfomation> map = new HashMap<>();
-			
-			int rad = this.rand.nextInt(5) + 2;
-			for(int x = -rad; x < rad; x++) {
-				for(int y = -rad; y < rad; y++) {
-					for(int z = -rad; z < rad; z++) {
-						map.put(getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]));
-					}
+		this.setDead();
+		world.setEntityState(this, (byte)3);
+		
+		int rad = this.rand.nextInt(5) + 2;
+		for(int x = -rad; x < rad; x++) {
+			for(int y = -rad; y < rad; y++) {
+				for(int z = -rad; z < rad; z++) {
+					WorldColorsHandler.putInfo(this.world, getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
 				}
 			}
-			
-			WorldColorsHandler.putInfoLargeRenderUpdate(world, map);
-        }
+		}		
+		if(this.world.isRemote) {
+			this.world.markBlockRangeForRenderUpdate(getPosition().add(-rad, -rad, -rad), getPosition().add(rad, rad, rad));
+		}
 	}
 	
 	@Override
