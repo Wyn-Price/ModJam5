@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "worldpaint:items/color_picker_fill",
+        "layer1": "worldpaint:items/color_picker_overlay"
+    }
+}

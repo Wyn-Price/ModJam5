@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemArmor;
@@ -102,27 +103,7 @@ public class WorldPaintRecipes {
 	                }
 	            }
 	        }
-	        
-	        int color = ((ItemArmor)itemstack.getItem()).getColor(itemstack);
-	        
-	        NBTTagCompound nbttagcompound = bootStack.getTagCompound();
-
-            if (nbttagcompound == null)
-            {
-                nbttagcompound = new NBTTagCompound();
-                bootStack.setTagCompound(nbttagcompound);
-            }
-
-            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
-
-            if (!nbttagcompound.hasKey("display", 10))
-            {
-                nbttagcompound.setTag("display", nbttagcompound1);
-            }
-
-            nbttagcompound1.setInteger("color", color);
-	        
-			return bootStack;
+	        return ColorUtils.setColor(bootStack,  ((ItemArmor)itemstack.getItem()).getColor(itemstack));
 		}
 
 		@Override

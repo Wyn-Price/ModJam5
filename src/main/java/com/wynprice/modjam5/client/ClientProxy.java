@@ -5,6 +5,7 @@ import com.wynprice.modjam5.client.entityrenders.RenderPaintThrown;
 import com.wynprice.modjam5.common.CommonProxy;
 import com.wynprice.modjam5.common.entities.EntityPaintThrown;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -29,21 +30,8 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 		Minecraft mc = Minecraft.getMinecraft();
 		ItemColors ic = mc.getItemColors();
-		ic.registerItemColorHandler((stack, tint) -> {
-			 NBTTagCompound nbttagcompound = stack.getTagCompound();
-
-	            if (nbttagcompound != null)
-	            {
-	                NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
-
-	                if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
-	                {
-	                    return nbttagcompound1.getInteger("color");
-	                }
-	            }
-
-	            return -1;
-		}, WorldPaintItems.THROWABLE_PAINT);
+		ic.registerItemColorHandler((stack, tint) -> tint == 0 ? ColorUtils.getColor(stack) : -1, 
+				WorldPaintItems.THROWABLE_PAINT, WorldPaintItems.COLORPICKER);
 	}
 	
 	@Override

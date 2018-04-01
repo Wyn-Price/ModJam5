@@ -19,10 +19,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessagePacketRequestCapability extends MessagePacket<MessagePacketRequestCapability> {
 
+	private ChunkPos pos;
+
 	public MessagePacketRequestCapability() {
 	}
-	
-	private ChunkPos pos;
 	
 	public MessagePacketRequestCapability(Chunk chunk) {
 		this.pos = chunk.getPos();

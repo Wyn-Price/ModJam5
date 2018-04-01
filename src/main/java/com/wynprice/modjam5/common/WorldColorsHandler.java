@@ -1,10 +1,11 @@
 package com.wynprice.modjam5.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
+import com.wynprice.modjam5.common.network.packets.MessagePacketRequestCapability;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,8 +22,6 @@ import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -33,16 +33,20 @@ public class WorldColorsHandler {
 		event.addCapability(new ResourceLocation(WorldPaint.MODID, "colorProvider"), new CapabilityHandler.ColorCapabilityProvider());
 	}
 	
-//	@SubscribeEvent
-//	public static void onChunkWatch(ChunkEvent.Load event) {
-//		WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(event.getChunk()));
-//	}
+	private static final ArrayList<ChunkPos> requestedChunks = new ArrayList<>();
 	
 	public static DataInfomation getInfo(World worldIn, BlockPos pos) {
 		if(worldIn == null) return DataInfomation.DEFAULT; //Not usually called
 		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
 		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
 		if(cap != null) {
+			if(!cap.hasSynced() && !requestedChunks.contains(chunk.getPos())) {
+				requestedChunks.add(chunk.getPos());
+				WorldPaintNetwork.sendToServer(new MessagePacketRequestCapability(chunk));
+			}
+			if(cap.hasSynced() && requestedChunks.contains(chunk.getPos())) {
+				requestedChunks.remove(chunk.getPos());
+			}
 			DataInfomation info = cap.getMap().get(pos);
 			return info == null ? DataInfomation.DEFAULT : info;
 		}
@@ -162,14 +166,30 @@ public class WorldColorsHandler {
 		
 		public static interface IDataInfomationProvider {
 			HashMap<BlockPos, DataInfomation> getMap();
+			
+			boolean hasSynced();
+			
+			/**Internal use only*/
+			void sync();
 		}
 		
 		public static class DefaultImpl implements IDataInfomationProvider {
 			private final HashMap<BlockPos, DataInfomation> map = new HashMap<>();
+			private boolean synced;
 			
 			@Override
 			public HashMap<BlockPos, DataInfomation> getMap() {
 				return map;
+			}
+			
+			@Override
+			public void sync() {
+				this.synced = true;
+			}
+			
+			@Override
+			public boolean hasSynced() {
+				return synced;
 			}
 		}
 		
@@ -213,6 +233,8 @@ public class WorldColorsHandler {
 							data.getIntArray("spreadTo")
 					));
 				}
+				
+				instance.sync();
 			}
 			
 		}	

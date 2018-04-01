@@ -19,11 +19,11 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk> {
 
-	public MessagePacketSyncChunk() {
-	}
-	
 	private NBTTagCompound nbt;
 	private ChunkPos pos;
+	
+	public MessagePacketSyncChunk() {
+	}
 	
 	public MessagePacketSyncChunk(Chunk chunk) {
 		this.nbt = chunk.hasCapability(WorldColorsHandler.CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapabilities().serializeNBT() : new NBTTagCompound();

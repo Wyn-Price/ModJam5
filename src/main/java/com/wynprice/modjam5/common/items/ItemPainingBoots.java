@@ -4,6 +4,7 @@ import java.awt.Paint;
 
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.init.SoundEvents;
@@ -34,18 +35,7 @@ public class ItemPainingBoots extends ItemArmor {
 	
 	@Override
 	public int getColor(ItemStack stack) {
-		
-		NBTTagCompound nbttagcompound = stack.getTagCompound();
-        if (nbttagcompound != null)
-        {
-            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("display");
-
-            if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
-            {
-                return nbttagcompound1.getInteger("color");
-            }
-        }
-        return 16777215;
+		return ColorUtils.getColor(stack);
 	}
 	
 	@EventBusSubscriber(modid=WorldPaint.MODID)
