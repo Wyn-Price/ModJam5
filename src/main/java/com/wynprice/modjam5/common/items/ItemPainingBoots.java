@@ -1,7 +1,5 @@
 package com.wynprice.modjam5.common.items;
 
-import java.awt.Paint;
-
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.utils.ColorUtils;
@@ -11,7 +9,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -47,7 +44,7 @@ public class ItemPainingBoots extends ItemArmor {
 					BlockPos pos = event.player.getPosition().down();
 					ItemStack stack = event.player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 					if(event.player.world.getBlockState(pos).getMaterial() != Material.AIR) {
-						WorldColorsHandler.putInfo(event.player.world, pos, new WorldColorsHandler.DataInfomation(((ItemPainingBoots)stack.getItem()).getColor(stack), true, pos, new int[0]));
+						WorldColorsHandler.putInfo(event.player.world, pos, new WorldColorsHandler.DataInfomation(((ItemPainingBoots)stack.getItem()).getColor(stack), true, pos, new int[0]), true);
 					}
 				}
 			}

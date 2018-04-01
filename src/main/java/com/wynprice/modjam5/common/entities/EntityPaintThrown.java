@@ -1,6 +1,9 @@
 package com.wynprice.modjam5.common.entities;
 
+import java.util.HashMap;
+
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -8,6 +11,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,14 +49,18 @@ public class EntityPaintThrown extends EntityThrowable {
         {
 			this.setDead();
 			world.setEntityState(this, (byte)3);
+			HashMap<BlockPos, DataInfomation> map = new HashMap<>();
+			
 			int rad = this.rand.nextInt(5) + 2;
 			for(int x = -rad; x < rad; x++) {
 				for(int y = -rad; y < rad; y++) {
 					for(int z = -rad; z < rad; z++) {
-						WorldColorsHandler.putInfo(world, getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]));
+						map.put(getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]));
 					}
 				}
 			}
+			
+			WorldColorsHandler.putInfoLargeRenderUpdate(world, map);
         }
 	}
 	

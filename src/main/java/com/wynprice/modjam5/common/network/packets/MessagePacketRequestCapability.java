@@ -42,7 +42,7 @@ public class MessagePacketRequestCapability extends MessagePacket<MessagePacketR
 	
 	@Override
 	public void onReceived(MessagePacketRequestCapability message, EntityPlayer player) {
-		WorldPaintNetwork.sendToPlayer(player, new MessagePacketSyncChunk(player.world.getChunkFromChunkCoords(message.pos.x, message.pos.z), BlockPos.ORIGIN));
+		WorldPaintNetwork.sendToPlayer(player, new MessagePacketSyncChunk(player.world.getChunkFromChunkCoords(message.pos.x, message.pos.z)));
 	}
 
 }

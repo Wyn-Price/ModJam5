@@ -21,15 +21,28 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 
 	private NBTTagCompound nbt;
 	private ChunkPos pos;
-	private BlockPos position;
+	private BlockPos fromPos;
+	private BlockPos toPos;
+
+	private boolean doRenderUpdate = true;	
 	
 	public MessagePacketSyncChunk() {
 	}
 	
-	public MessagePacketSyncChunk(Chunk chunk, BlockPos position) {
+	public MessagePacketSyncChunk(Chunk chunk) {
+		this(chunk, BlockPos.ORIGIN, BlockPos.ORIGIN);
+		doRenderUpdate = false;
+	}
+	
+	public MessagePacketSyncChunk(Chunk chunk, BlockPos renderPos) {
+		this(chunk, renderPos, renderPos);
+	}
+	
+	public MessagePacketSyncChunk(Chunk chunk, BlockPos fromPos, BlockPos toPos) {
 		this.nbt = chunk.hasCapability(WorldColorsHandler.CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapabilities().serializeNBT() : new NBTTagCompound();
 		this.pos = chunk.getPos();
-		this.position = position;
+		this.fromPos = fromPos;
+		this.toPos = toPos;
 	}
 	
 	@Override
@@ -44,9 +57,18 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 			}
 			buf.writeInt(pos.x);
 			buf.writeInt(pos.z);
-			buf.writeInt(position.getX());
-			buf.writeInt(position.getY());
-			buf.writeInt(position.getZ());
+			
+			buf.writeBoolean(doRenderUpdate);
+			
+			if(doRenderUpdate) {
+				buf.writeInt(fromPos.getX());
+				buf.writeInt(fromPos.getY());
+				buf.writeInt(fromPos.getZ());
+				
+				buf.writeInt(toPos.getX());
+				buf.writeInt(toPos.getY());
+				buf.writeInt(toPos.getZ());
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -65,7 +87,12 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 			ByteArrayInputStream bais = new ByteArrayInputStream(abyte);
 			this.nbt = CompressedStreamTools.readCompressed(bais);
 			this.pos = new ChunkPos(buf.readInt(), buf.readInt());
-			this.position = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+			this.doRenderUpdate = buf.readBoolean();
+			if(doRenderUpdate) {
+				this.fromPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+				this.toPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+			}
+			
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		} 
@@ -77,8 +104,10 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 		if(!message.nbt.getKeySet().isEmpty()) {
 			Minecraft.getMinecraft().world.getChunkFromChunkCoords(message.pos.x, message.pos.z).getCapabilities().deserializeNBT(message.nbt);
 		}
-		if(message.position != BlockPos.ORIGIN) {
-			Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(message.position, message.position);
+		if(message.doRenderUpdate) {
+			player.world.markBlockRangeForRenderUpdate(message.fromPos, message.toPos);
 		}
+		
+		
 	}
 }

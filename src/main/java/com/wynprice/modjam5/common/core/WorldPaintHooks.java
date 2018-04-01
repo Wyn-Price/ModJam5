@@ -2,10 +2,7 @@ package com.wynprice.modjam5.common.core;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
-
-import org.apache.logging.log4j.core.net.Facility;
 
 import com.google.common.collect.Lists;
 import com.wynprice.modjam5.client.IWorldPaintColorResolver;
@@ -13,17 +10,14 @@ import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.b3d.B3DModel.Face;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +69,7 @@ public class WorldPaintHooks {
 				}
 				DataInfomation dirInfo = WorldColorsHandler.getInfo(worldIn, pos.offset(dir));
 				if(dirInfo.isDefault()) {
-					WorldColorsHandler.putInfo(worldIn, pos.offset(dir), info);
+					WorldColorsHandler.putInfo(worldIn, pos.offset(dir), info, true);
 					try {
 						Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(pos.offset(dir), pos.offset(dir));
 					} catch (NullPointerException e) {

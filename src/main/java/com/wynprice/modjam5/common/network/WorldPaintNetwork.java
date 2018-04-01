@@ -24,7 +24,6 @@ public class WorldPaintNetwork {
 		registerMessage(MessagePacketRequestCapability.class, Side.SERVER);
 		registerMessage(MessagePacketColorGuiClosed.class, Side.SERVER);
 		registerMessage(MessagePacketSyncEntity.class, Side.CLIENT);
-
 	}
 	
 	private static int idCount = -1;
