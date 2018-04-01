@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class ColorGreen extends ColorFunction {
 
 	public ColorGreen() {
-		super(76f, 153f, RangeType.HUE);
+		super(70f, 153f, RangeType.HUE);
 	}
 	
 	@Override

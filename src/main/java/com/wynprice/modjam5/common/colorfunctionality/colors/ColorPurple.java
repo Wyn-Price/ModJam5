@@ -9,7 +9,7 @@ import net.minecraft.potion.PotionEffect;
 public class ColorPurple extends ColorFunction {
 
 	public ColorPurple() {
-		super(240f, 273f, RangeType.HUE);
+		super(240f, 307f, RangeType.HUE);
 	}
 	
 	@Override

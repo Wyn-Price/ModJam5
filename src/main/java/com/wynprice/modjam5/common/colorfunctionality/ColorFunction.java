@@ -23,6 +23,19 @@ public class ColorFunction {
 		
 	}
 	
+	public boolean recieveAwayCalls() {
+		return false;
+	}
+
+	/**
+	 * Called when {@link #recieveAwayCalls()} is true. Called every tick, on an entity that <b>IS NOT</b> in this color zone. Used to remove attributes
+	 * @param entity 
+	 */
+	public void onAwayMobTick(EntityLivingBase entity) {
+		
+	}
+	
+	
 	public boolean shouldApply(float[] hsb) {
 		float value = hsb[rangeType.ordinal()] * 360f;
 		return value >= minRange && value <= maxRange;

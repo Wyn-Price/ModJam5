@@ -1,6 +1,7 @@
 package com.wynprice.modjam5.common.colorfunctionality.colors;
 
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
+import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +26,7 @@ public class ColorRed extends ColorFunction {
 	
 	@Override
 	public boolean shouldApply(float[] hsb) {
-		return hsb[0] <= minRange || hsb[0] >= maxRange;
+		return !ColorFunctions.WHITE.shouldApply(hsb) && (hsb[0] <= minRange / 360f || hsb[0] >= maxRange / 360f);
 	}
 	
 }

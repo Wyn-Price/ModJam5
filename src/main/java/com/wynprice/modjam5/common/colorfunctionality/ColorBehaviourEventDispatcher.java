@@ -26,19 +26,30 @@ public class ColorBehaviourEventDispatcher {
 	public static void onLivingTick(LivingUpdateEvent event) {
 		BlockPos position = event.getEntity().getPosition();
 		DataInfomation info = WorldColorsHandler.getInfo(event.getEntity().world, position);
-		if(info.isDefault() || event.getEntity().world.getBlockState(position).getMaterial() == Material.AIR) {
-			position = position.down();
-			info = WorldColorsHandler.getInfo(event.getEntity().world, position);
+		for(int i = 0; i < 2; i++) {
+			if(info.isDefault() || event.getEntity().world.getBlockState(position).getMaterial() == Material.AIR) {
+				position = position.down();
+				info = WorldColorsHandler.getInfo(event.getEntity().world, position);
+			}
 		}
-		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().world.isRemote)
+		
+		ColorFunction inFunction = null;
+		if(event.getEntity() instanceof EntityPlayer)
 		if(WorldPaintHooks.allowedBlocks.contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
-			ColorUtils.findClosestPaletteColorTo(info.getColor()).onMobTick(event.getEntityLiving());
+			inFunction = ColorUtils.findClosestPaletteColorTo(info.getColor());
+			inFunction.onMobTick(event.getEntityLiving());
+		}
+		
+		for(ColorFunction function : ColorFunctions.AWAY_FUNCTIONS) {
+			if(function != inFunction) {
+				function.onAwayMobTick(event.getEntityLiving());
+			}
 		}
 	}
 	
 	public static void onRandomBlockTick(World world, BlockPos pos, DataInfomation info) {
 		if(!info.isDefault()) {
-			ColorUtils.findClosestPaletteColorTo(info.getColor()).onBlockTick(world, pos);
+//			ColorUtils.findClosestPaletteColorTo(info.getColor()).onBlockTick(world, pos);
 		}
 	}
 }
