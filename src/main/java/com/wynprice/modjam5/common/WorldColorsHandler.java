@@ -58,7 +58,7 @@ public class WorldColorsHandler {
 		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
 		if(cap != null) {
 			cap.getMap().put(pos, info);
-			WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(worldIn.getChunkFromChunkCoords(chunk.x, chunk.z)));
+			WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(worldIn.getChunkFromChunkCoords(chunk.x, chunk.z), pos));
 
 		}
 	}

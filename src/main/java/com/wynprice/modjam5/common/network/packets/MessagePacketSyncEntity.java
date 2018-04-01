@@ -1,5 +1,6 @@
 package com.wynprice.modjam5.common.network.packets;
 
+import com.wynprice.modjam5.client.handlers.EntityUpdateHandler;
 import com.wynprice.modjam5.common.network.MessagePacket;
 
 import io.netty.buffer.ByteBuf;
@@ -36,10 +37,7 @@ public class MessagePacketSyncEntity extends MessagePacket<MessagePacketSyncEnti
 	
 	@Override
 	public void onReceived(MessagePacketSyncEntity message, EntityPlayer player) {
-		Entity entity = player.world.getEntityByID(message.entityID);
-		if(entity != null) {
-			entity.readFromNBT(message.tag);
-		}
+		EntityUpdateHandler.addToMap(message.entityID, message.tag);
 	}
 
 }

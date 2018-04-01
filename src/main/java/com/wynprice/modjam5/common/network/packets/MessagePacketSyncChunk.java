@@ -13,21 +13,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk> {
 
 	private NBTTagCompound nbt;
 	private ChunkPos pos;
+	private BlockPos position;
 	
 	public MessagePacketSyncChunk() {
 	}
 	
-	public MessagePacketSyncChunk(Chunk chunk) {
+	public MessagePacketSyncChunk(Chunk chunk, BlockPos position) {
 		this.nbt = chunk.hasCapability(WorldColorsHandler.CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapabilities().serializeNBT() : new NBTTagCompound();
 		this.pos = chunk.getPos();
+		this.position = position;
 	}
 	
 	@Override
@@ -42,6 +44,10 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 			}
 			buf.writeInt(pos.x);
 			buf.writeInt(pos.z);
+			buf.writeInt(position.getX());
+			buf.writeInt(position.getY());
+			buf.writeInt(position.getZ());
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +65,7 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 			ByteArrayInputStream bais = new ByteArrayInputStream(abyte);
 			this.nbt = CompressedStreamTools.readCompressed(bais);
 			this.pos = new ChunkPos(buf.readInt(), buf.readInt());
+			this.position = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		} catch (IndexOutOfBoundsException | IOException e) {
 			e.printStackTrace();
 		} 
@@ -69,6 +76,9 @@ public class MessagePacketSyncChunk extends MessagePacket<MessagePacketSyncChunk
 	public void onReceived(MessagePacketSyncChunk message, EntityPlayer player) {
 		if(!message.nbt.getKeySet().isEmpty()) {
 			Minecraft.getMinecraft().world.getChunkFromChunkCoords(message.pos.x, message.pos.z).getCapabilities().deserializeNBT(message.nbt);
+		}
+		if(message.position != BlockPos.ORIGIN) {
+			Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(message.position, message.position);
 		}
 	}
 }

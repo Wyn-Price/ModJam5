@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -41,7 +42,7 @@ public class MessagePacketRequestCapability extends MessagePacket<MessagePacketR
 	
 	@Override
 	public void onReceived(MessagePacketRequestCapability message, EntityPlayer player) {
-		WorldPaintNetwork.sendToPlayer(player, new MessagePacketSyncChunk(player.world.getChunkFromChunkCoords(message.pos.x, message.pos.z)));
+		WorldPaintNetwork.sendToPlayer(player, new MessagePacketSyncChunk(player.world.getChunkFromChunkCoords(message.pos.x, message.pos.z), BlockPos.ORIGIN));
 	}
 
 }

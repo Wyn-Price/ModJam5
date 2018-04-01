@@ -1,11 +1,10 @@
 package com.wynprice.modjam5.common.entities;
 
+import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
@@ -46,6 +45,14 @@ public class EntityPaintThrown extends EntityThrowable {
         {
 			this.setDead();
 			world.setEntityState(this, (byte)3);
+			int rad = this.rand.nextInt(5) + 2;
+			for(int x = -rad; x < rad; x++) {
+				for(int y = -rad; y < rad; y++) {
+					for(int z = -rad; z < rad; z++) {
+						WorldColorsHandler.putInfo(world, getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]));
+					}
+				}
+			}
         }
 	}
 	
