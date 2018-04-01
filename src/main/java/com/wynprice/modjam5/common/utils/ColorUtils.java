@@ -1,5 +1,7 @@
 package com.wynprice.modjam5.common.utils;
 
+import com.wynprice.modjam5.common.colorfunctionality.EnumColorBehaviour;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -40,4 +42,19 @@ public class ColorUtils {
 	
         return itemstack;
 	}
+	
+	public static EnumColorBehaviour findClosestPaletteColorTo(int color) {
+		EnumColorBehaviour closestColor = null;
+        double closestDistance = Integer.MAX_VALUE;
+        for (EnumColorBehaviour behaviour : EnumColorBehaviour.values()) {
+        	PaletteColor paletteColor = behaviour.getPaletteColor();
+            double distance = paletteColor.distanceTo(color);
+//            System.out.println(behaviour + "" + distance);
+            if (distance <= closestDistance) {
+                closestDistance = distance;
+                closestColor = paletteColor.getBehaviour();
+            }
+        }
+        return closestColor;
+    }
 }

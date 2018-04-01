@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
+import com.wynprice.modjam5.common.colorfunctionality.ColorBehaviourEventDispatcher;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,6 +27,7 @@ public class WorldPaintHooks {
 	public static ArrayList<Block> allowedBlocks = Lists.newArrayList(new Block[] {
 			Blocks.GRASS,
 			Blocks.DIRT,
+			Blocks.FARMLAND,
 			
 			Blocks.LEAVES,
 			Blocks.LEAVES2,
@@ -48,6 +50,7 @@ public class WorldPaintHooks {
 		if(!allowedBlocks.contains(block)) return;
 		if(!worldIn.isRemote) {
 			DataInfomation info = WorldColorsHandler.getInfo(worldIn, pos);	
+			ColorBehaviourEventDispatcher.onRandomBlockTick(worldIn, pos, info);
 			if(info.isSpreadable()) {
 				if(info.getSpreadTo().length >= EnumFacing.values().length) {
 					return;

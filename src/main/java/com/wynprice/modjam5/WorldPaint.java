@@ -9,10 +9,17 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.Color;
+
 import org.apache.logging.log4j.Logger;
 
 import com.wynprice.modjam5.common.CommonProxy;
+import com.wynprice.modjam5.common.WorldCreativeTab;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 @Mod(modid = WorldPaint.MODID, name = WorldPaint.NAME, version = WorldPaint.VERSION)
 public class WorldPaint
@@ -23,13 +30,7 @@ public class WorldPaint
 
     private static Logger logger;
     
-    public static final CreativeTabs TAB = new CreativeTabs(MODID) {
-		
-		@Override
-		public ItemStack getTabIconItem() {
-			return new ItemStack(WorldPaintItems.COLORPICKER); //TODO make phase through colors
-		}
-	};
+    public static final CreativeTabs TAB = new WorldCreativeTab();
     
     @SidedProxy(clientSide="com.wynprice.modjam5.client.ClientProxy",serverSide="com.wynprice.modjam5.server.ServerProxy")
     private static CommonProxy proxy;

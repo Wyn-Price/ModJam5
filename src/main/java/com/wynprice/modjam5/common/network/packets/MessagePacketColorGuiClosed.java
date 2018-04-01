@@ -16,14 +16,16 @@ public class MessagePacketColorGuiClosed extends MessagePacket<MessagePacketColo
 	private int handOrdinal;
 	private int newColor;
 	private Point colorPoint;
+	private float lightness;
 	
 	public MessagePacketColorGuiClosed() {
 	}
 	
-	public MessagePacketColorGuiClosed(EnumHand hand, int newColor, Point colorPoint) {
+	public MessagePacketColorGuiClosed(EnumHand hand, int newColor, Point colorPoint, float lightness) {
 		this.handOrdinal = hand.ordinal();
 		this.newColor = newColor;
 		this.colorPoint = colorPoint;
+		this.lightness = lightness;
 	}
 	
 	@Override
@@ -32,6 +34,7 @@ public class MessagePacketColorGuiClosed extends MessagePacket<MessagePacketColo
 		buf.writeInt(newColor);
 		buf.writeInt(colorPoint.x);
 		buf.writeInt(colorPoint.y);
+		buf.writeFloat(lightness);
 	}
 	
 	@Override
@@ -39,6 +42,7 @@ public class MessagePacketColorGuiClosed extends MessagePacket<MessagePacketColo
 		handOrdinal = buf.readInt();
 		newColor = buf.readInt();
 		this.colorPoint = new Point(buf.readInt(), buf.readInt());
+		this.lightness = buf.readFloat();
 	}
 
 	@Override
@@ -48,6 +52,7 @@ public class MessagePacketColorGuiClosed extends MessagePacket<MessagePacketColo
 		NBTTagCompound tag = stack.getOrCreateSubCompound("worldpaint");
 		tag.setInteger("pointX", message.colorPoint.x);
 		tag.setInteger("pointY", message.colorPoint.y);
+		tag.setFloat("lightnessValue", message.lightness);
 
 	}
 }
