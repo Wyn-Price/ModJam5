@@ -11,6 +11,7 @@ import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -20,7 +21,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventBusSubscriber(modid=WorldPaint.MODID)
 public class ColorBehaviourEventDispatcher {
 	
-	private static HashMap<Entity, EnumColorBehaviour> previousTickMap = new HashMap<>();
 	
 	@SubscribeEvent
 	public static void onLivingTick(LivingUpdateEvent event) {
@@ -30,22 +30,15 @@ public class ColorBehaviourEventDispatcher {
 			position = position.down();
 			info = WorldColorsHandler.getInfo(event.getEntity().world, position);
 		}
-				
+		if(event.getEntity() instanceof EntityPlayer && !event.getEntity().world.isRemote)
 		if(WorldPaintHooks.allowedBlocks.contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
-			EnumColorBehaviour behaviour = ColorUtils.findClosestPaletteColorTo(info.getColor());
-			previousTickMap.put(event.getEntity(), behaviour);
-			if(new Random().nextFloat() < behaviour.getChance()) {
-				behaviour.onMobTick(event.getEntityLiving());
-			}
+			ColorUtils.findClosestPaletteColorTo(info.getColor()).onMobTick(event.getEntityLiving());
 		}
 	}
 	
 	public static void onRandomBlockTick(World world, BlockPos pos, DataInfomation info) {
 		if(!info.isDefault()) {
-			EnumColorBehaviour behaviour = ColorUtils.findClosestPaletteColorTo(info.getColor());
-			if(new Random().nextFloat() < behaviour.getChance()) {
-				behaviour.onBlockTick(world, pos);
-			}
+			ColorUtils.findClosestPaletteColorTo(info.getColor()).onBlockTick(world, pos);
 		}
 	}
 }

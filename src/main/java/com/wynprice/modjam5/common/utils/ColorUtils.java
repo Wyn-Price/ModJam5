@@ -1,6 +1,12 @@
 package com.wynprice.modjam5.common.utils;
 
-import com.wynprice.modjam5.common.colorfunctionality.EnumColorBehaviour;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
+import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,17 +49,16 @@ public class ColorUtils {
         return itemstack;
 	}
 	
-	public static EnumColorBehaviour findClosestPaletteColorTo(int color) {
-		EnumColorBehaviour closestColor = null;
-        double closestDistance = Integer.MAX_VALUE;
-        for (EnumColorBehaviour behaviour : EnumColorBehaviour.values()) {
-        	PaletteColor paletteColor = behaviour.getPaletteColor();
-            double distance = paletteColor.distanceTo(color);
-            if (distance <= closestDistance) {
-                closestDistance = distance;
-                closestColor = paletteColor.getBehaviour();
-            }
-        }
-        return closestColor;
+	public static ColorFunction findClosestPaletteColorTo(int color) {
+		ArrayList<ColorFunction> acceptedFunction = new ArrayList<>();
+		for(ColorFunction function : ColorFunctions.ALL_FUNCTIONS) {
+			if(function.shouldApply(Color.RGBtoHSB((color>>16)&0xFF, (color>>8)&0xFF, (color>>0)&0xFF, null))) {
+				acceptedFunction.add(function);
+			}
+		}
+		if(acceptedFunction.isEmpty()) {
+			acceptedFunction.add(ColorFunctions.NONE);
+		}
+		return acceptedFunction.get(new Random().nextInt(acceptedFunction.size()));
     }
 }
