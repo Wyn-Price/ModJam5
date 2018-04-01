@@ -12,18 +12,18 @@ public class PaletteColor {
 
     public PaletteColor(EnumColorBehaviour behaviour) {
     	int color = behaviour.getBaseColor().getRGB();
-        this.r = ((color & 0xff000000) >>> 24);
-        this.g = ((color & 0x00ff0000) >>> 16);
-        this.b = ((color & 0x0000ff00) >>> 8);
+        this.r = (color>>16)&0xFF;
+        this.g = (color>>8)&0xFF;
+        this.b = (color>>0)&0xFF;
         this.color = color;
         this.behaviour = behaviour;
     }
 
     public double distanceTo(int color) {
-        double deltaR = this.r - ((color & 0xff000000) >>> 24);
-        double deltaG = this.g - ((color & 0x00ff0000) >>> 16);
-        double deltaB = this.b - ((color & 0x0000ff00) >>> 8);
-        return (deltaR * deltaR) + (deltaG * deltaG) + (deltaB * deltaB);
+        int deltaR = this.r - (color>>16)&0xFF;
+        int deltaG = this.g - (color>>8)&0xFF;
+        int deltaB = this.b - (color>>0)&0xFF;
+        return ((deltaR * deltaR) + (deltaG * deltaG) + (deltaB * deltaB));
     }
     
     public EnumColorBehaviour getBehaviour() {

@@ -49,7 +49,6 @@ public class ColorUtils {
         for (EnumColorBehaviour behaviour : EnumColorBehaviour.values()) {
         	PaletteColor paletteColor = behaviour.getPaletteColor();
             double distance = paletteColor.distanceTo(color);
-//            System.out.println(behaviour + "" + distance);
             if (distance <= closestDistance) {
                 closestDistance = distance;
                 closestColor = paletteColor.getBehaviour();
