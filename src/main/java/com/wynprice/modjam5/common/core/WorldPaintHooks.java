@@ -9,10 +9,14 @@ import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.colorfunctionality.ColorBehaviourEventDispatcher;
+import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
+import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -122,5 +126,17 @@ public class WorldPaintHooks {
 		}
 
 		return (i / times & 255) << 16 | (j / times & 255) << 8 | k / times & 255;
+	}
+	
+	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
+		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
+		float _deafult = block.getSlipperiness(state, world, pos, entity);
+		if(!info.isDefault()) {
+			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE) {
+				_deafult = 1.08f;
+			}
+		}
+		
+		return _deafult;
 	}
 }
