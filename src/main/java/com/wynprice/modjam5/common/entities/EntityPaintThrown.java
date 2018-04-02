@@ -1,26 +1,25 @@
 package com.wynprice.modjam5.common.entities;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.wynprice.modjam5.client.particles.ParticleThrownEntityPaintExplosion;
 import com.wynprice.modjam5.common.WorldColorsHandler;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
-import com.wynprice.modjam5.common.registries.WorldPaintItems;
+import com.wynprice.modjam5.common.core.WorldPaintHooks;
+import com.wynprice.modjam5.common.utils.BlockPosHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.collection.parallel.ParIterableLike.Min;
 
 public class EntityPaintThrown extends EntityThrowable {
 
@@ -57,17 +56,25 @@ public class EntityPaintThrown extends EntityThrowable {
 			this.setDead();
 			world.setEntityState(this, (byte)3);
 		}
+		ArrayList<BlockPos> posisionList = new ArrayList<>();
 		int rad = this.rand.nextInt(5) + 2;
 		for(int x = -rad; x < rad; x++) {
 			for(int y = -rad; y < rad; y++) {
 				for(int z = -rad; z < rad; z++) {
-					WorldColorsHandler.putInfo(this.world, getPosition().add(x, y, z), new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+					BlockPos pos = getPosition().add(x, y, z);
+					if(WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
+						posisionList.add(pos);
+					}
+					if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
+						WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+					}
 				}
 			}
 		}		
 		this.world.playSound(null, getPosition(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 3f, (rad - 2) / 5f);
 		if(this.world.isRemote) {
-			this.world.markBlockRangeForRenderUpdate(getPosition().add(-rad, -rad, -rad), getPosition().add(rad, rad, rad));
+			Pair<BlockPos, BlockPos> pair = BlockPosHelper.getRange(posisionList);
+			this.world.markBlockRangeForRenderUpdate(pair.getLeft(), pair.getRight());
 		}
 	}
 	
