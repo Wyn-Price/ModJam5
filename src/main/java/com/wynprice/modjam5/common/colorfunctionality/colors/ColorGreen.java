@@ -30,39 +30,41 @@ public class ColorGreen extends ColorFunction {
 	
 	@Override
 	public void onBlockTick(World world, BlockPos pos) {
-		if(true) return;//TODO fix lag issues
-		EnumFacing face = EnumFacing.getFront(new Random().nextInt());
-		if(world.getBlockState(pos.offset(face)).getBlock() instanceof IGrowable) {
-			if(ItemDye.applyBonemeal(ItemStack.EMPTY, world, pos.offset(face))) {
-				if(!world.isRemote) {
-	                world.playEvent(2005, pos, 0);
+		int commandId = new Random().nextInt(3);
+		if(commandId == 0) {
+			EnumFacing face = EnumFacing.getFront(new Random().nextInt());
+			if(world.getBlockState(pos.offset(face)).getBlock() instanceof IGrowable) {
+				if(ItemDye.applyBonemeal(ItemStack.EMPTY, world, pos.offset(face))) {
+					if(!world.isRemote) {
+		                world.playEvent(2005, pos, 0);
+					}
+					return;
 				}
-				return;
 			}
-		}
-		
-		EnumFacing face2 = EnumFacing.getFront(new Random().nextInt());
-		if(world.getBlockState(pos.offset(face2)).getBlock() == Blocks.DIRT) {
-			world.setBlockState(pos.offset(face2), Blocks.GRASS.getDefaultState());
-		}
-		
-		if(world.getBlockState(pos).getBlock() instanceof BlockLeaves && new Random().nextFloat() < 0.01f) { //Terrible code. I dont care. //TODO config and sort out 
-			for(IProperty<?> property : world.getBlockState(pos).getBlock().getBlockState().getProperties()) {
-				if(property.getValueClass() == BlockPlanks.EnumType.class) {
-					BlockPlanks.EnumType enu = (BlockPlanks.EnumType) world.getBlockState(pos).getValue(property);
-					EnumFacing facing = EnumFacing.getHorizontal(new Random().nextInt());
-					BlockPos position = world.getTopSolidOrLiquidBlock(pos.offset(facing, 5));
-					Block block = world.getBlockState(position).getBlock();
-					if(!(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT)) {
-						position = position.down();
-					}
-					block = world.getBlockState(position).getBlock();
-					if(!(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT)) {
-						position = position.down();
-					}
-					block = world.getBlockState(position).getBlock();
-					if(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT) {
-						world.setBlockState(position.up(), Blocks.SAPLING.getDefaultState().withProperty(BlockSapling.TYPE, enu));
+		} else if(commandId == 1) {
+			EnumFacing face2 = EnumFacing.getFront(new Random().nextInt());
+			if(world.getBlockState(pos.offset(face2)).getBlock() == Blocks.DIRT) {
+				world.setBlockState(pos.offset(face2), Blocks.GRASS.getDefaultState());
+			}
+		} else if(commandId == 2) {
+			if(world.getBlockState(pos).getBlock() instanceof BlockLeaves && new Random().nextFloat() < 0.05f) { //Terrible code. I dont care. //TODO config and sort out 
+				for(IProperty<?> property : world.getBlockState(pos).getBlock().getBlockState().getProperties()) {
+					if(property.getValueClass() == BlockPlanks.EnumType.class) {
+						BlockPlanks.EnumType enu = (BlockPlanks.EnumType) world.getBlockState(pos).getValue(property);
+						EnumFacing facing = EnumFacing.getHorizontal(new Random().nextInt());
+						BlockPos position = world.getTopSolidOrLiquidBlock(pos.offset(facing, 5));
+						Block block = world.getBlockState(position).getBlock();
+						if(!(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT)) {
+							position = position.down();
+						}
+						block = world.getBlockState(position).getBlock();
+						if(!(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT)) {
+							position = position.down();
+						}
+						block = world.getBlockState(position).getBlock();
+						if(block == Blocks.GRASS || block == Blocks.GRASS_PATH || block == Blocks.DIRT) {
+							world.setBlockState(position.up(), Blocks.SAPLING.getDefaultState().withProperty(BlockSapling.TYPE, enu));
+						}
 					}
 				}
 			}
