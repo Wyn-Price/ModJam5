@@ -1,19 +1,24 @@
 package com.wynprice.modjam5.common.recipes;
 
+import java.util.function.Supplier;
+
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class RecipeColoredPaint extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeColorItem extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
-	public RecipeColoredPaint() {
-		setRegistryName("colored_paint");
+	private final Supplier<Item> itemsupplier;
+	
+	public RecipeColorItem(String name, Supplier<Item> itemsupplier) {
+		this.itemsupplier = itemsupplier;
+		setRegistryName(name);
 	}
 	
 	@Override
@@ -25,7 +30,7 @@ public class RecipeColoredPaint extends IForgeRegistryEntry.Impl<IRecipe> implem
 			if(!itemStack.isEmpty()) {
 				if(itemStack.getItem() == WorldPaintItems.COLORPICKER) {
 					picker = itemStack;
-				} else if(itemStack.getItem() == WorldPaintItems.THROWABLE_PAINT) {
+				} else if(itemStack.getItem() == itemsupplier.get()) {
 					paint = itemStack;
 				} else {
 					return false;
@@ -44,7 +49,7 @@ public class RecipeColoredPaint extends IForgeRegistryEntry.Impl<IRecipe> implem
 			if(!itemStack.isEmpty()) {
 				if(itemStack.getItem() == WorldPaintItems.COLORPICKER) {
 					picker = itemStack;
-				} else if(itemStack.getItem() == WorldPaintItems.THROWABLE_PAINT) {
+				} else if(itemStack.getItem() == itemsupplier.get()) {
 					paint = itemStack;
 				} else {
 					return ItemStack.EMPTY;

@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 		Minecraft mc = Minecraft.getMinecraft();
 		ItemColors ic = mc.getItemColors();
 		ic.registerItemColorHandler((stack, tint) -> tint == 0 ? ColorUtils.getColor(stack) : -1, 
-				WorldPaintItems.THROWABLE_PAINT, WorldPaintItems.COLORPICKER);
+				WorldPaintItems.THROWABLE_PAINT, WorldPaintItems.COLORPICKER, WorldPaintItems.PAINTBRUSH);
 	}
 	
 	@Override

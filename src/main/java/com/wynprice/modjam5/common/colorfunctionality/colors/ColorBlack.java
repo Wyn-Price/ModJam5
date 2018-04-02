@@ -7,6 +7,8 @@ import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class ColorBlack extends ColorFunction {
 
@@ -15,10 +17,8 @@ public class ColorBlack extends ColorFunction {
 	}
 	
 	@Override
-	public void onMobTick(EntityLivingBase entity) {
-		if(!entity.world.isRemote) {
-			entity.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 15, 0, false, false));
-		}
+	public void onBlockTick(World world, BlockPos pos) {
+		
 	}
 	
 	@Override

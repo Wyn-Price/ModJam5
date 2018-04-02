@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.xml.crypto.Data;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
@@ -15,7 +17,9 @@ import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketRequestCapability;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 import com.wynprice.modjam5.common.utils.BlockPosHelper;
+import com.wynprice.modjam5.common.utils.ByteBufHelper;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -72,13 +76,14 @@ public class WorldColorsHandler {
 				cap.getMap().remove(pos);
 			} else {
 				cap.getMap().put(pos, info);
+				cap.addPositionToOriginList(info.getOrigin(), pos);
 			}
 			if(doRenderUpdate && !worldIn.isRemote) {
 				if(!syncedChunks.containsKey(chunk.getPos())) {
 					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
 				}
 				syncedChunks.get(chunk.getPos()).getRight().add(pos);
-				if(worldIn.getTotalWorldTime() - syncedChunks.get(chunk.getPos()).getLeft() > 20) {//one time per 5 seconds
+				if(worldIn.getTotalWorldTime() - syncedChunks.get(chunk.getPos()).getLeft() > 200) {//one time per 5 seconds
 					Pair<BlockPos, BlockPos> positions = BlockPosHelper.getRange(syncedChunks.get(chunk.getPos()).getRight());
 					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
 					WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(chunk, positions.getLeft(), positions.getRight()));
@@ -120,18 +125,6 @@ public class WorldColorsHandler {
 			return origin;
 		}
 		
-		public int getX() {
-			return origin.getX();
-		}
-		
-		public int getY() {
-			return origin.getY();
-		}
-		
-		public int getZ() {
-			return origin.getZ();
-		}
-		
 		public int[] getSpreadTo() {
 			return spreadTo;
 		}
@@ -148,21 +141,31 @@ public class WorldColorsHandler {
 			return new DataInfomation(
 							data.getInteger("color"), 
 							data.getBoolean("doesSpread"), 
-							new BlockPos(data.getInteger("originPosX"), data.getInteger("originPosY"), data.getInteger("originPosZ")), 
+							BlockPos.fromLong(data.getLong("originPos")), 
 							data.getIntArray("spreadTo"));
+		}
+		
+		public static DataInfomation fromByteBuf(ByteBuf buf) {
+			return new DataInfomation(buf.readInt(),
+					buf.readBoolean(),
+					BlockPos.fromLong(buf.readLong()),
+					ByteBufHelper.readIntArray(buf));
 		}
 
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setInteger("color", this.getColor());
 			nbt.setBoolean("doesSpread", this.isSpreadable());
-			
-			nbt.setInteger("originPosX", this.getX());
-			nbt.setInteger("originPosY", this.getY());
-			nbt.setInteger("originPosZ", this.getZ());
-			
+			nbt.setLong("originPos", this.getOrigin().toLong());
 			nbt.setIntArray("spreadTo", this.getSpreadTo());
 			return nbt;
+		}
+		
+		public void writeToByteBuf(ByteBuf buf) {
+			buf.writeInt(this.getColor());
+			buf.writeBoolean(this.isSpreadable());
+			buf.writeLong(this.getOrigin().toLong());
+			ByteBufHelper.writeIntArray(buf, this.getSpreadTo());
 		}
 	}
 	
@@ -222,11 +225,11 @@ public class WorldColorsHandler {
 		
 		public static class DefaultImpl implements IDataInfomationProvider {
 			private final ConcurrentHashMap<BlockPos, DataInfomation> map = new ConcurrentHashMap();
-			private static final ConcurrentHashMap<BlockPos, List<BlockPos>> originMap = new ConcurrentHashMap<>();
+			private static final HashMap<BlockPos, List<BlockPos>> originMap = new HashMap<>();
 			private boolean synced;
 			
 			@Override
-			public Map<BlockPos, DataInfomation> getMap() {
+			public synchronized Map<BlockPos, DataInfomation> getMap() {
 				return map;
 			}
 			

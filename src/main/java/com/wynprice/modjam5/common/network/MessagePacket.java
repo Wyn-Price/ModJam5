@@ -4,6 +4,7 @@ import com.wynprice.modjam5.WorldPaint;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -13,7 +14,7 @@ public abstract class MessagePacket <REQ extends IMessage> implements IMessage, 
 {
 	@Override
 	public REQ onMessage(REQ message, MessageContext ctx) {
-		onReceived(message, ctx.side == Side.SERVER ? ctx.getServerHandler().player : WorldPaint.getProxy().getPlayer());
+		FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> onReceived(message, ctx.side == Side.SERVER ? ctx.getServerHandler().player : WorldPaint.getProxy().getPlayer()));
 		return null;
 	}
 	

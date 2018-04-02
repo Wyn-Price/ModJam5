@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "worldpaint:items/paint_brush_paint",
+        "layer1": "worldpaint:items/paint_brush"
+    }
+}

@@ -6,44 +6,46 @@ import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.network.MessagePacket;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessagePacketSingleBlockUpdate extends MessagePacket<MessagePacketSingleBlockUpdate> {
 
-	private BlockPos fromPos;
-	private BlockPos toPos;
+	private BlockPos pos;
+	private DataInfomation info;
 	
 	public MessagePacketSingleBlockUpdate() {
 	}
 	
-	public MessagePacketSingleBlockUpdate(BlockPos fromPos, BlockPos toPos) {
-		this.fromPos = fromPos;
-		this.toPos = toPos;
+	public MessagePacketSingleBlockUpdate(BlockPos pos, DataInfomation info) {
+		this.pos = pos;
+		this.info = info;
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(fromPos.getX());
-		buf.writeInt(fromPos.getY());
-		buf.writeInt(fromPos.getZ());
-		
-		buf.writeInt(toPos.getX());
-		buf.writeInt(toPos.getY());
-		buf.writeInt(toPos.getZ());
+		buf.writeLong(pos.toLong());
+		buf.writeBoolean(info != null);
+		if(info != null) {
+			info.writeToByteBuf(buf);
+		}
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.fromPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-		this.toPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+		this.pos = BlockPos.fromLong(buf.readLong());
+		if(buf.readBoolean()) {
+			this.info = DataInfomation.fromByteBuf(buf);
+		}
 	}
 	
 	
 	@Override
 	public void onReceived(MessagePacketSingleBlockUpdate message, EntityPlayer player) {
-		player.world.markBlockRangeForRenderUpdate(fromPos, toPos);
+		WorldColorsHandler.putInfo(player.world, message.pos, message.info, false);
+		player.world.markBlockRangeForRenderUpdate(message.pos, message.pos);
 	}
 	
 }

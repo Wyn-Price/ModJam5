@@ -1,13 +1,13 @@
 package com.wynprice.modjam5.common.utils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.util.math.BlockPos;
 
 public class BlockPosHelper {
-	public static Pair<BlockPos, BlockPos> getRange(ArrayList<BlockPos> posList) {
+	public static Pair<BlockPos, BlockPos> getRange(List<BlockPos> posList) {
 		if(posList.isEmpty()) {
 			return Pair.of(BlockPos.ORIGIN, BlockPos.ORIGIN);		
 		}
