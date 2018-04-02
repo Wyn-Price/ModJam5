@@ -17,6 +17,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -131,9 +132,9 @@ public class WorldPaintHooks {
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
 		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
 		float _deafult = block.getSlipperiness(state, world, pos, entity);
-		if(!info.isDefault()) {
+		if(!info.isDefault() && allowedBlocks.contains(block)) {
 			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE) {
-				_deafult = 1.08f;
+				return entity instanceof EntityItem ? 1f : 1.05f;
 			}
 		}
 		
