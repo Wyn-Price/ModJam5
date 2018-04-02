@@ -1,12 +1,14 @@
 package com.wynprice.modjam5.common.entities;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.wynprice.modjam5.client.particles.ParticleThrownEntityPaintExplosion;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.core.WorldPaintHooks;
+import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.utils.BlockPosHelper;
 
 import net.minecraft.client.Minecraft;
@@ -40,6 +42,30 @@ public class EntityPaintThrown extends EntityThrowable {
     @SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
     {
+    	ArrayList<BlockPos> posisionList = new ArrayList<>();
+		Random rand = new Random(id);
+		world.setEntityState(this, (byte)id);
+		int rad = rand.nextInt(5) + 2;
+		for(int x = -rad; x < rad; x++) {
+			for(int y = -rad; y < rad; y++) {
+				for(int z = -rad; z < rad; z++) {
+					BlockPos pos = getPosition().add(x, y, z);
+					if(!WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
+						continue;
+					}
+					posisionList.add(pos);
+					if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
+						WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+					}
+				}
+			}
+		}	
+    	
+		if(this.world.isRemote) {
+			Pair<BlockPos, BlockPos> pair = BlockPosHelper.getRange(posisionList);
+			this.world.markBlockRangeForRenderUpdate(pair.getLeft(), pair.getRight());
+		}
+		
     	float speed = 5f;
     	for(int i = 0; i < 15; i++) {
         	Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleThrownEntityPaintExplosion(world, posX, posY, posZ,
@@ -52,30 +78,32 @@ public class EntityPaintThrown extends EntityThrowable {
 
 	@Override
 	protected void onImpact(RayTraceResult result) {
+		if(result.entityHit != null) {
+			return;
+		}
 		if(!this.world.isRemote) {
 			this.setDead();
-			world.setEntityState(this, (byte)3);
-		}
-		ArrayList<BlockPos> posisionList = new ArrayList<>();
-		int rad = this.rand.nextInt(5) + 2;
-		for(int x = -rad; x < rad; x++) {
-			for(int y = -rad; y < rad; y++) {
-				for(int z = -rad; z < rad; z++) {
-					BlockPos pos = getPosition().add(x, y, z);
-					if(WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
-						posisionList.add(pos);
-					}
-					if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
-						WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+			int id = new Random().nextInt();
+			Random rand = new Random(id);
+			world.setEntityState(this, (byte)id);
+			int rad = rand.nextInt(5) + 2;
+			for(int x = -rad; x < rad; x++) {
+				for(int y = -rad; y < rad; y++) {
+					for(int z = -rad; z < rad; z++) {
+						BlockPos pos = getPosition().add(x, y, z);
+						if(!WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
+							continue;
+						}
+						if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
+							WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+						}
 					}
 				}
-			}
-		}		
-		this.world.playSound(null, getPosition(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 3f, (rad - 2) / 5f);
-		if(this.world.isRemote) {
-			Pair<BlockPos, BlockPos> pair = BlockPosHelper.getRange(posisionList);
-			this.world.markBlockRangeForRenderUpdate(pair.getLeft(), pair.getRight());
+			}	
+			this.world.playSound(null, getPosition(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 3f, (rad - 2) / 5f);
 		}
+		
+
 	}
 	
 	@Override

@@ -34,7 +34,7 @@ public class WorldPaintTransformer implements IClassTransformer {
 					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 					list.add(new VarInsnNode(Opcodes.ALOAD, 1));
 					list.add(new VarInsnNode(Opcodes.ALOAD, 2));
-					list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/wynprice/modjam5/common/core/WorldPaintHooks", "getProperBiomeColor", "(ILnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;Lcom/wynprice/modjam5/client/IWorldPaintColorResolver;)I", false));
+					list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/wynprice/modjam5/common/core/WorldPaintHooksClient", "getProperBiomeColor", "(ILnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;Lcom/wynprice/modjam5/client/IWorldPaintColorResolver;)I", false));
 					method.instructions.insertBefore(ins, list);
 					
 				}

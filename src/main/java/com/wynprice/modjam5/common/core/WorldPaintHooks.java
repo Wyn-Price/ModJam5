@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -82,52 +83,6 @@ public class WorldPaintHooks {
 				}
 			}
 		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) { //Needed colorResolver to be string as the class is inaccessable
-		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
-		WorldColorsHandler.DataInfomation in = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, pos);
-		if(in != null && !in.isDefault() && !in.isSpreadable()) {
-			return in.getColor();
-		}
-		int i = 0;
-		int j = 0;
-		int k = 0;
-		int blend = 1; //TODO config
-		int defaultcol = 0x2D3FF4;
-		int times = 0;
-		for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-blend, -blend, -blend), pos.add(blend, blend, blend)))
-		{
-			times++;
-			int l = resolver.getColorAtPos(blockAccess.getBiome(blockpos$mutableblockpos), blockpos$mutableblockpos);
-			WorldColorsHandler.DataInfomation info = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, blockpos$mutableblockpos);
-			if(info == null) info = WorldColorsHandler.DataInfomation.DEFAULT;
-			if(!info.isDefault()) {
-				l = info.getColor();
-			} else if(type == 3) {
-				if(l != 0xFFFFFF) {
-					float r1 = ((l >> 16) & 0xFF) / 255f;
-					float g1 = ((l >> 8) & 0xFF) / 255f;
-					float b1 = (l & 0xFF) / 255f;
-					
-					float r2 = ((defaultcol >> 16) & 0xFF) / 255f;
-					float g2 = ((defaultcol >> 8) & 0xFF) / 255f;
-					float b2 = (defaultcol & 0xFF) / 255f;
-					
-					
-					l = new Color(r1 * r2, g1 * g2, b1 * b2).getRGB();
-				} else {
-					l = defaultcol;
-				}
-				
-			}
-			i += (l & 16711680) >> 16;
-			j += (l & 65280) >> 8;
-			k += l & 255;
-		}
-
-		return (i / times & 255) << 16 | (j / times & 255) << 8 | k / times & 255;
 	}
 	
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {

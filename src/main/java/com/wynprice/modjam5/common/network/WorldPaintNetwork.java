@@ -3,6 +3,7 @@ package com.wynprice.modjam5.common.network;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.network.packets.MessagePacketColorGuiClosed;
 import com.wynprice.modjam5.common.network.packets.MessagePacketRequestCapability;
+import com.wynprice.modjam5.common.network.packets.MessagePacketSingleBlockUpdate;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncEntity;
 
@@ -24,6 +25,7 @@ public class WorldPaintNetwork {
 		registerMessage(MessagePacketRequestCapability.class, Side.SERVER);
 		registerMessage(MessagePacketColorGuiClosed.class, Side.SERVER);
 		registerMessage(MessagePacketSyncEntity.class, Side.CLIENT);
+		registerMessage(MessagePacketSingleBlockUpdate.class, Side.CLIENT);
 	}
 	
 	private static int idCount = -1;

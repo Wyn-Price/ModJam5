@@ -36,7 +36,6 @@ public class ColorBehaviourEventDispatcher {
 		}
 		
 		ColorFunction inFunction = null;
-		if(event.getEntity() instanceof EntityPlayer)
 		if(WorldPaintHooks.allowedBlocks.contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
 			inFunction = ColorUtils.findClosestPaletteColorTo(info.getColor());
 			inFunction.onMobTick(event.getEntityLiving());

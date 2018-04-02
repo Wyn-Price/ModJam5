@@ -12,35 +12,38 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessagePacketSingleBlockUpdate extends MessagePacket<MessagePacketSingleBlockUpdate> {
 
-	private BlockPos blockPos;
-	private DataInfomation info;
+	private BlockPos fromPos;
+	private BlockPos toPos;
 	
 	public MessagePacketSingleBlockUpdate() {
 	}
 	
-	public MessagePacketSingleBlockUpdate(BlockPos pos, DataInfomation info) {
-		this.blockPos = pos;
-		this.info = info;
+	public MessagePacketSingleBlockUpdate(BlockPos fromPos, BlockPos toPos) {
+		this.fromPos = fromPos;
+		this.toPos = toPos;
 	}
 	
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(blockPos.getX());
-		buf.writeInt(blockPos.getY());
-		buf.writeInt(blockPos.getZ());
-		ByteBufUtils.writeTag(buf, info.serializeNBT());
+		buf.writeInt(fromPos.getX());
+		buf.writeInt(fromPos.getY());
+		buf.writeInt(fromPos.getZ());
+		
+		buf.writeInt(toPos.getX());
+		buf.writeInt(toPos.getY());
+		buf.writeInt(toPos.getZ());
 	}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		this.blockPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-		info = DataInfomation.fromNBT(ByteBufUtils.readTag(buf));
+		this.fromPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+		this.toPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 	}
 	
 	
 	@Override
 	public void onReceived(MessagePacketSingleBlockUpdate message, EntityPlayer player) {
-		WorldColorsHandler.putInfo(player.world, message.blockPos, message.info, false);
+		player.world.markBlockRangeForRenderUpdate(fromPos, toPos);
 	}
 	
 }

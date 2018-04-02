@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.items.ItemColorPicker;
 import com.wynprice.modjam5.common.items.ItemPainingBoots;
+import com.wynprice.modjam5.common.items.ItemPaintScrubber;
 import com.wynprice.modjam5.common.items.ItemThrowablePaint;
 
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -26,10 +27,11 @@ public class WorldPaintItems {
 	public static final Item COLORPICKER = new ItemColorPicker();
 	public static final Item PAINTING_BOOTS = new ItemPainingBoots();
 	public static final Item THROWABLE_PAINT = new ItemThrowablePaint();
+	public static final Item PAINT_SCRUBBER = new ItemPaintScrubber();
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
-		registerItems(event.getRegistry(), PAINTING_BOOTS, THROWABLE_PAINT, COLORPICKER);
+		registerItems(event.getRegistry(), PAINTING_BOOTS, THROWABLE_PAINT, COLORPICKER, PAINT_SCRUBBER);
 	}
 	
 	private final static ArrayList<Item> itemList = new ArrayList<>();
