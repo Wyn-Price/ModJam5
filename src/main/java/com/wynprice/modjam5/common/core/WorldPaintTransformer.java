@@ -107,6 +107,22 @@ public class WorldPaintTransformer implements IClassTransformer {
 		}
 	};
 	
+	private final Consumer<ClassNode> Entity = (node) -> {
+		for(MethodNode method : node.methods) {
+			if(method.name.equals(getName("move", "func_70091_d")) && method.desc.equals("(Lnet/minecraft/entity/MoverType;DDD)V")) {
+				for(int i = 0; i < method.instructions.size(); i++) {
+					AbstractInsnNode ins = method.instructions.get(i);
+					if(ins instanceof MethodInsnNode && ins.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+						MethodInsnNode mIns = (MethodInsnNode) ins;
+						if(mIns.owner.equals("net/minecraft/block/Block") && mIns.name.equals(getName("onLanded", "func_176216_a")) && mIns.desc.equals("(Lnet/minecraft/world/World;Lnet/minecraft/entity/Entity;)V")) {
+							method.instructions.set(ins, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/wynprice/modjam5/common/core/WorldPaintHooks", "onLanded", "(Lnet/minecraft/block/Block;Lnet/minecraft/world/World;Lnet/minecraft/entity/Entity;)V", false));
+						}
+					}
+				}
+			}
+		}
+	};
+	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if(transformedName.equals("net.minecraft.world.biome.BiomeColorHelper")) {
@@ -119,6 +135,8 @@ public class WorldPaintTransformer implements IClassTransformer {
 			basicClass = runConsumer(EntityLivingBase, transformedName, basicClass);
 		} else if(transformedName.equals("net.minecraft.entity.item.EntityItem")) {
 			basicClass = runConsumer(EntityItem, transformedName, basicClass);
+		} else if(transformedName.equals("net.minecraft.entity.Entity")) {
+			basicClass = runConsumer(Entity, transformedName, basicClass);
 		}
 		return basicClass;
 		

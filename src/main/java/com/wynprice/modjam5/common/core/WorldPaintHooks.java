@@ -13,6 +13,7 @@ import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -131,13 +132,27 @@ public class WorldPaintHooks {
 	
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
 		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
-		float _deafult = block.getSlipperiness(state, world, pos, entity);
 		if(!info.isDefault() && allowedBlocks.contains(block)) {
 			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE) {
 				return entity instanceof EntityItem ? 1f : 1.05f;
 			}
 		}
-		
-		return _deafult;
+		return block.getSlipperiness(state, world, pos, entity);
+	}
+	
+	public static void onLanded(Block block, World worldIn, Entity entityIn) {
+		BlockPos position = entityIn.getPosition();
+		DataInfomation info = WorldColorsHandler.getInfo(worldIn, position);
+		for(int i = 0; i < 3; i++) {
+			if(info.isDefault() || worldIn.getBlockState(position).getMaterial() == Material.AIR) {
+				position = position.down();
+				info = WorldColorsHandler.getInfo(worldIn, position);
+			}
+		}
+		if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.BLUE && !entityIn.isSneaking()) {
+			entityIn.motionY = -entityIn.motionY * 0.9f;
+			return;
+		}
+		block.onLanded(worldIn, entityIn);
 	}
 }
