@@ -1,6 +1,7 @@
 package com.wynprice.modjam5.common.colorfunctionality;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,6 +24,14 @@ public class ColorFunction {
 		
 	}
 	
+	public void onWorldTick(World world) {
+		
+	}
+	
+	public boolean onEntityDamaged(EntityLivingBase entity, DamageSource source, float amount) {
+		return false;
+	}
+
 	public boolean recieveAwayCalls() {
 		return false;
 	}
@@ -34,10 +43,18 @@ public class ColorFunction {
 	public void onAwayMobTick(EntityLivingBase entity) {
 		
 	}
-	
+
+	@Deprecated //TODO remove before release
+	public boolean lastResort() {
+		return false;
+	}
 	
 	public boolean shouldApply(float[] hsb) {
 		float value = hsb[rangeType.ordinal()] * 360f;
+		boolean flag = true;
+		if(rangeType == RangeType.HUE) {
+			flag = hsb[1] < 0.5f && hsb[2] > 0.5f; 
+		}
 		return value >= minRange && value <= maxRange;
 	}
 	

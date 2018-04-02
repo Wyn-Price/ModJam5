@@ -2,20 +2,25 @@ package com.wynprice.modjam5.common.entities;
 
 import java.util.HashMap;
 
+import com.wynprice.modjam5.client.particles.ParticleThrownEntityPaintExplosion;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.collection.parallel.ParIterableLike.Min;
 
 public class EntityPaintThrown extends EntityThrowable {
 
@@ -36,18 +41,22 @@ public class EntityPaintThrown extends EntityThrowable {
     @SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
     {
-        if (id == 3) {
-            for (int i = 0; i < 8; ++i) {
-	            this.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, this.posX, this.posY, this.posZ, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, ((double)this.rand.nextFloat() - 0.5D) * 0.08D, Item.getIdFromItem(WorldPaintItems.THROWABLE_PAINT));
-            }
-        }
+    	float speed = 5f;
+    	for(int i = 0; i < 15; i++) {
+        	Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleThrownEntityPaintExplosion(world, posX, posY, posZ,
+        			((rand.nextDouble() * 2) - 1) * speed,
+        			((rand.nextDouble() * 2) - 1) * speed,
+        			((rand.nextDouble() * 2) - 1) * speed,
+        			color));
+    	}
     }
 
 	@Override
 	protected void onImpact(RayTraceResult result) {
-		this.setDead();
-		world.setEntityState(this, (byte)3);
-		
+		if(!this.world.isRemote) {
+			this.setDead();
+			world.setEntityState(this, (byte)3);
+		}
 		int rad = this.rand.nextInt(5) + 2;
 		for(int x = -rad; x < rad; x++) {
 			for(int y = -rad; y < rad; y++) {
@@ -56,6 +65,7 @@ public class EntityPaintThrown extends EntityThrowable {
 				}
 			}
 		}		
+		this.world.playSound(null, getPosition(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 3f, (rad - 2) / 5f);
 		if(this.world.isRemote) {
 			this.world.markBlockRangeForRenderUpdate(getPosition().add(-rad, -rad, -rad), getPosition().add(rad, rad, rad));
 		}

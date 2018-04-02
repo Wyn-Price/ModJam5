@@ -73,11 +73,6 @@ public class WorldPaintHooks {
 				DataInfomation dirInfo = WorldColorsHandler.getInfo(worldIn, pos.offset(dir));
 				if(dirInfo.isDefault()) {
 					WorldColorsHandler.putInfo(worldIn, pos.offset(dir), info, true);
-					try {
-						Minecraft.getMinecraft().world.markBlockRangeForRenderUpdate(pos.offset(dir), pos.offset(dir));
-					} catch (NullPointerException e) {
-						;//TODO handle exceptions
-					}
 				}
 			}
 		}

@@ -49,19 +49,19 @@ public class WorldPaintItems {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private static void registerRenderForItems(Item... items) {
+	public static void registerRenderForItems(Item... items) {
 		for(Item item : items) {
 			registerRenderForItem(item);
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static void registerRenderForItem(Item item) {
+	public static void registerRenderForItem(Item item) {
 		registerRenderForItem(item, (stack) -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private static void registerRenderForItem(Item item, ItemMeshDefinition definition) {
+	public static void registerRenderForItem(Item item, ItemMeshDefinition definition) {
 		ModelLoader.setCustomMeshDefinition(item, definition);
 	}
 }

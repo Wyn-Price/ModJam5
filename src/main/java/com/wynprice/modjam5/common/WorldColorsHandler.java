@@ -2,14 +2,16 @@ package com.wynprice.modjam5.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketRequestCapability;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
+import com.wynprice.modjam5.common.utils.BlockPosHelper;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +19,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
@@ -56,13 +57,23 @@ public class WorldColorsHandler {
 		return DataInfomation.DEFAULT;
 	}
 	
+	public static HashMap<ChunkPos, Pair<Long, ArrayList<BlockPos>>> syncedChunks = new HashMap<>();
+	
 	public static void putInfo(World worldIn, BlockPos pos, DataInfomation info, boolean doRenderUpdate) {
 		Chunk chunk = worldIn.getChunkFromBlockCoords(pos);
 		CapabilityHandler.IDataInfomationProvider cap = chunk.hasCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) ? chunk.getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP) : null;
 		if(cap != null) {
 			cap.getMap().put(pos, info);
-			if(doRenderUpdate) {
-				WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(worldIn.getChunkFromChunkCoords(chunk.x, chunk.z), pos));
+			if(doRenderUpdate && !worldIn.isRemote) {
+				if(!syncedChunks.containsKey(chunk.getPos())) {
+					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
+				}
+				syncedChunks.get(chunk.getPos()).getRight().add(pos);
+				if(worldIn.getTotalWorldTime() - syncedChunks.get(chunk.getPos()).getLeft() > 100) {//one time per 5 seconds
+					Pair<BlockPos, BlockPos> positions = BlockPosHelper.getRange(syncedChunks.get(chunk.getPos()).getRight());
+					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
+					WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(chunk, positions.getLeft(), positions.getRight()));
+				}
 			}
 		}
 	}
@@ -123,6 +134,27 @@ public class WorldColorsHandler {
 			}
 			aint[this.spreadTo.length] = face.getIndex();
 		}
+		
+		public static DataInfomation fromNBT(NBTTagCompound data) {
+			return new DataInfomation(
+							data.getInteger("color"), 
+							data.getBoolean("doesSpread"), 
+							new BlockPos(data.getInteger("originPosX"), data.getInteger("originPosY"), data.getInteger("originPosZ")), 
+							data.getIntArray("spreadTo"));
+		}
+
+		public NBTTagCompound serializeNBT() {
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setInteger("color", this.getColor());
+			nbt.setBoolean("doesSpread", this.isSpreadable());
+			
+			nbt.setInteger("originPosX", this.getX());
+			nbt.setInteger("originPosY", this.getY());
+			nbt.setInteger("originPosZ", this.getZ());
+			
+			nbt.setIntArray("spreadTo", this.getSpreadTo());
+			return nbt;
+		}
 	}
 	
 	/**
@@ -169,20 +201,20 @@ public class WorldColorsHandler {
 		}
 		
 		public static interface IDataInfomationProvider {
-			HashMap<BlockPos, DataInfomation> getMap();
+			Map<BlockPos, DataInfomation> getMap();
 			
 			boolean hasSynced();
-			
+						
 			/**Internal use only*/
 			void sync();
 		}
 		
 		public static class DefaultImpl implements IDataInfomationProvider {
-			private final HashMap<BlockPos, DataInfomation> map = new HashMap<>();
+			private final ConcurrentHashMap<BlockPos, DataInfomation> map = new ConcurrentHashMap<BlockPos, DataInfomation>();
 			private boolean synced;
 			
 			@Override
-			public HashMap<BlockPos, DataInfomation> getMap() {
+			public Map<BlockPos, DataInfomation> getMap() {
 				return map;
 			}
 			
@@ -206,19 +238,7 @@ public class WorldColorsHandler {
 					EnumFacing side) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				for(BlockPos pos : instance.getMap().keySet()) {
-					NBTTagCompound nbt_data = new NBTTagCompound();
-					DataInfomation info = instance.getMap().get(pos);
-					
-					nbt_data.setInteger("color", info.getColor());
-					nbt_data.setBoolean("doesSpread", info.isSpreadable());
-					
-					nbt_data.setInteger("originPosX", info.getX());
-					nbt_data.setInteger("originPosY", info.getY());
-					nbt_data.setInteger("originPosZ", info.getZ());
-					
-					nbt_data.setIntArray("spreadTo", info.getSpreadTo());
-					
-					nbt.setTag(pos.getX() + " " + pos.getY() + " " + pos.getZ(), nbt_data);
+					nbt.setTag(pos.getX() + " " + pos.getY() + " " + pos.getZ(), instance.getMap().get(pos).serializeNBT());
 				}
 				return nbt;
 			}
@@ -230,17 +250,10 @@ public class WorldColorsHandler {
 				for(String key : tag.getKeySet()) {
 					NBTTagCompound data = tag.getCompoundTag(key);
 					instance.getMap().put(new BlockPos(Integer.valueOf(key.split(" ")[0]), Integer.valueOf(key.split(" ")[1]), Integer.valueOf(key.split(" ")[2])),
-					new DataInfomation(
-							data.getInteger("color"), 
-							data.getBoolean("doesSpread"), 
-							new BlockPos(data.getInteger("originPosX"), data.getInteger("originPosY"), data.getInteger("originPosZ")), 
-							data.getIntArray("spreadTo")
-					));
+					DataInfomation.fromNBT(data));
 				}
-				
 				instance.sync();
 			}
-			
 		}	
 	}
 }

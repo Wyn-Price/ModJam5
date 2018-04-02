@@ -51,7 +51,9 @@ public class RecipeColoredPaint extends IForgeRegistryEntry.Impl<IRecipe> implem
 				}
 			}
 		}
-		return ColorUtils.setColor(paint.copy(), ColorUtils.getColor(picker));
+		ItemStack stack = ColorUtils.setColor(paint.copy(), ColorUtils.getColor(picker));
+		stack.setCount(1);
+		return stack;
 	}
 	
 	@Override

@@ -8,9 +8,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-public class ColorWhite extends ColorFunction {
+public class ColorBlack extends ColorFunction {
 
-	public ColorWhite() {
+	public ColorBlack() {
 		super(0f, 0f, RangeType.HUE);
 	}
 	
@@ -24,7 +24,7 @@ public class ColorWhite extends ColorFunction {
 	@Override
 	public boolean shouldApply(float[] hsb) {
 		Color color = new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
-		return Math.min(color.getRed(), Math.min(color.getGreen(), color.getBlue())) > 200;
+		return Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue())) < 55;
 	}
 
 }

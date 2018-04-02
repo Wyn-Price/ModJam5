@@ -51,11 +51,17 @@ public class ColorUtils {
 	
 	public static ColorFunction findClosestPaletteColorTo(int color) {
 		ArrayList<ColorFunction> acceptedFunction = new ArrayList<>();
+
 		for(ColorFunction function : ColorFunctions.ALL_FUNCTIONS) {
 			if(function.shouldApply(Color.RGBtoHSB((color>>16)&0xFF, (color>>8)&0xFF, (color>>0)&0xFF, null))) {
 				acceptedFunction.add(function);
 			}
 		}
+		
+		if(acceptedFunction.contains(ColorFunctions.GRAY)) {
+			return ColorFunctions.GRAY;
+		}
+		
 		if(acceptedFunction.isEmpty()) {
 			acceptedFunction.add(ColorFunctions.NONE);
 		}

@@ -14,7 +14,9 @@ public class ColorPurple extends ColorFunction {
 	
 	@Override
 	public void onMobTick(EntityLivingBase entity) {
-		entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 110, 3, false, false));
+		if(!entity.world.isRemote) {
+			entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 15, 3, false, false));
+		}
 	}
 
 }

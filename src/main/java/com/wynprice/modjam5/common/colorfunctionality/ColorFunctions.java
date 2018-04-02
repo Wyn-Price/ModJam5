@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorBlue;
+import com.wynprice.modjam5.common.colorfunctionality.colors.ColorGray;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorGreen;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorPurple;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorRed;
@@ -23,6 +24,7 @@ public class ColorFunctions {
 	public static final ColorFunction RED = register(new ColorRed());
 	public static final ColorFunction WHITE = register(new ColorWhite());
 	public static final ColorFunction YELLOW = register(new ColorYellow());
+	public static final ColorFunction GRAY = register(new ColorGray());
 
 	private static ColorFunction register(ColorFunction function) {
 		ALL_FUNCTIONS.add(function);

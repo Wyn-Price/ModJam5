@@ -88,7 +88,10 @@ public class RecipePaintBoots extends IForgeRegistryEntry.Impl<IRecipe> implemen
                 }
             }
         }
-        return ColorUtils.setColor(bootStack.copy(),  ((ItemArmor)itemstack.getItem()).getColor(itemstack));
+        
+    	ItemStack stack = ColorUtils.setColor(bootStack.copy(), ((ItemArmor)itemstack.getItem()).getColor(itemstack));
+		stack.setCount(1);
+		return stack;
 	}
 
 	@Override
