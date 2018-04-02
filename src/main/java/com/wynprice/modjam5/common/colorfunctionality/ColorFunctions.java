@@ -3,10 +3,12 @@ package com.wynprice.modjam5.common.colorfunctionality;
 import java.util.ArrayList;
 
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
+import com.wynprice.modjam5.common.colorfunctionality.colors.ColorBlack;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorBlue;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorGray;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorGreen;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorOrange;
+import com.wynprice.modjam5.common.colorfunctionality.colors.ColorPink;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorPurple;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorRed;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorWhite;
@@ -27,6 +29,8 @@ public class ColorFunctions {
 	public static final ColorFunction YELLOW = register(new ColorYellow());
 	public static final ColorFunction GRAY = register(new ColorGray());
 	public static final ColorFunction ORANGE = register(new ColorOrange());
+	public static final ColorFunction BLACK = register(new ColorBlack());
+	public static final ColorFunction PINk = register(new ColorPink());
 
 	private static ColorFunction register(ColorFunction function) {
 		ALL_FUNCTIONS.add(function);
