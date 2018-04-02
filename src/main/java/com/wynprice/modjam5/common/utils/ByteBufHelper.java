@@ -44,4 +44,20 @@ public class ByteBufHelper {
 		}
 		return aint;
 	}
+	
+	public static void writeLongArray(ByteBuf buf, long[] along) {
+		buf.writeInt(along.length);
+		for(long l : along) {
+			buf.writeLong(l);
+		}
+	}
+	
+	public static long[] readLongArray(ByteBuf buf) {
+		int size = buf.readInt();
+		long[] along = new long[size];
+		for(int i = 0; i < size; i++) {
+			along[i] = buf.readInt();
+		}
+		return along;
+	}
 }

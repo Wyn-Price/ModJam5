@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.wynprice.modjam5.common.CommonProxy;
 import com.wynprice.modjam5.common.WorldCreativeTab;
+import com.wynprice.modjam5.common.commands.CommandRemoveAllPaint;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
@@ -47,8 +49,13 @@ public class WorldPaint
     }
     
     @EventHandler
-    public  void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
     	proxy.postInit(event);
+    }
+    
+    @EventHandler
+    public void serverStart(FMLServerStartingEvent event) {
+    	event.registerServerCommand(new CommandRemoveAllPaint());
     }
     
     public static Logger getLogger() {

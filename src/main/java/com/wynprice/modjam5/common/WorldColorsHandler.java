@@ -74,6 +74,7 @@ public class WorldColorsHandler {
 		if(cap != null) {
 			if(info == null) {
 				cap.getMap().remove(pos);
+				
 			} else {
 				cap.getMap().put(pos, info);
 				cap.addPositionToOriginList(info.getOrigin(), pos);
@@ -83,7 +84,7 @@ public class WorldColorsHandler {
 					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
 				}
 				syncedChunks.get(chunk.getPos()).getRight().add(pos);
-				if(worldIn.getTotalWorldTime() - syncedChunks.get(chunk.getPos()).getLeft() > 200) {//one time per 5 seconds
+				if(worldIn.getTotalWorldTime() - syncedChunks.get(chunk.getPos()).getLeft() > 20) {
 					Pair<BlockPos, BlockPos> positions = BlockPosHelper.getRange(syncedChunks.get(chunk.getPos()).getRight());
 					syncedChunks.put(chunk.getPos(), Pair.of(worldIn.getTotalWorldTime(), new ArrayList<>()));
 					WorldPaintNetwork.sendToAll(new MessagePacketSyncChunk(chunk, positions.getLeft(), positions.getRight()));
@@ -214,6 +215,8 @@ public class WorldColorsHandler {
 			Map<BlockPos, DataInfomation> getMap();
 			
 			List<BlockPos> getPositionFromOrigin(BlockPos origin);
+						
+			void clear();
 			
 			void addPositionToOriginList(BlockPos origin, BlockPos pos); 
 			
@@ -225,7 +228,7 @@ public class WorldColorsHandler {
 		
 		public static class DefaultImpl implements IDataInfomationProvider {
 			private final ConcurrentHashMap<BlockPos, DataInfomation> map = new ConcurrentHashMap();
-			private static final HashMap<BlockPos, List<BlockPos>> originMap = new HashMap<>();
+			private final HashMap<BlockPos, List<BlockPos>> originMap = new HashMap<>();
 			private boolean synced;
 			
 			@Override
@@ -237,6 +240,12 @@ public class WorldColorsHandler {
 			public List<BlockPos> getPositionFromOrigin(BlockPos origin) {
 				List<BlockPos> list = originMap.get(origin);
 				return list == null ? new ArrayList<>() : list;
+			}
+
+			@Override
+			public void clear() {
+				originMap.clear();
+				map.clear();
 			}
 			
 			@Override
