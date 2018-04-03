@@ -32,30 +32,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldPaintHooks {
 	
-	public static ArrayList<Block> allowedBlocks = Lists.newArrayList(new Block[] {
-			Blocks.GRASS,
-			Blocks.DIRT,
-			Blocks.FARMLAND,
-			
-			Blocks.LEAVES,
-			Blocks.LEAVES2,
-			
-			Blocks.LOG,
-			Blocks.LOG2,
-			
-			Blocks.WATER,
-			Blocks.FLOWING_WATER,
-			
-			Blocks.VINE,
-			Blocks.WATERLILY,
-			
-			Blocks.TALLGRASS,
-			Blocks.DOUBLE_PLANT,
-			Blocks.REEDS
-	});
-	
 	public static void onRandomTick(Block block, World worldIn, BlockPos pos, IBlockState state, Random rand) {
-		if(!allowedBlocks.contains(block)) return;
+		if(new Random().nextFloat() < WorldPaintConfig.GENERAL.spreadChance || !WorldPaintConfig.GENERAL.getAllowedBlocks().contains(block)) {
+			return;
+		}
 		if(!worldIn.isRemote) {
 			DataInfomation info = WorldColorsHandler.getInfo(worldIn, pos);	
 			ColorBehaviourEventDispatcher.onRandomBlockTick(worldIn, pos, info);
@@ -88,7 +68,7 @@ public class WorldPaintHooks {
 	
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
 		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
-		if(!info.isDefault() && allowedBlocks.contains(block)) {
+		if(!info.isDefault() && WorldPaintConfig.GENERAL.getAllowedBlocks().contains(block)) {
 			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
 				return entity instanceof EntityItem ? 1f : 1.05f;
 			}

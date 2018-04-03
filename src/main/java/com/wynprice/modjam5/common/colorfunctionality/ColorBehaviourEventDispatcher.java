@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.core.WorldPaintHooks;
 import com.wynprice.modjam5.common.utils.ColorUtils;
@@ -36,7 +37,7 @@ public class ColorBehaviourEventDispatcher {
 		}
 		
 		ColorFunction inFunction = null;
-		if(WorldPaintHooks.allowedBlocks.contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
+		if(WorldPaintConfig.GENERAL.getAllowedBlocks().contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
 			inFunction = ColorUtils.findClosestPaletteColorTo(info.getColor());
 			inFunction.onMobTick(event.getEntityLiving());
 		}
@@ -60,7 +61,7 @@ public class ColorBehaviourEventDispatcher {
 		}
 		
 		ColorFunction inFunction = null;
-		if(WorldPaintHooks.allowedBlocks.contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
+		if(WorldPaintConfig.GENERAL.getAllowedBlocks().contains(event.getEntity().world.getBlockState(position).getBlock()) && !info.isDefault()) {
 			inFunction = ColorUtils.findClosestPaletteColorTo(info.getColor());
 			event.setCanceled(inFunction.onEntityDamaged(event.getEntityLiving(), event.getSource(), event.getAmount()));
 		}

@@ -60,6 +60,10 @@ public class ColorUtils {
 		
 		if(acceptedFunction.contains(ColorFunctions.GRAY)) {
 			return ColorFunctions.GRAY;
+		} else if(acceptedFunction.contains(ColorFunctions.WHITE)) {
+			return ColorFunctions.WHITE;
+		} else if(acceptedFunction.contains(ColorFunctions.BLACK)) {
+			return ColorFunctions.BLACK;
 		}
 		
 		if(acceptedFunction.isEmpty()) {

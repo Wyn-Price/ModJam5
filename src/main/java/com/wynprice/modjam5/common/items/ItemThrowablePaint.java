@@ -1,6 +1,7 @@
 package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.common.entities.EntityPaintThrown;
+import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncEntity;
 import com.wynprice.modjam5.common.utils.ColorUtils;
@@ -18,8 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class ItemThrowablePaint extends Item
-{
+public class ItemThrowablePaint extends Item implements IColorToolTip {
     public ItemThrowablePaint() {
         this.maxStackSize = 16;
         this.setRegistryName("throwable_paint");

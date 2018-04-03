@@ -2,6 +2,7 @@ package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
+import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSingleBlockUpdate;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
@@ -15,7 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemPaintBrush extends Item {
+public class ItemPaintBrush extends Item implements IColorToolTip {
 	public ItemPaintBrush() {
 		this.setRegistryName("paintbrush");
 		this.setUnlocalizedName("paintbrush");

@@ -7,8 +7,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.wynprice.modjam5.client.particles.ParticleThrownEntityPaintExplosion;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.core.WorldPaintHooks;
-import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.utils.BlockPosHelper;
 
 import net.minecraft.client.Minecraft;
@@ -45,18 +45,17 @@ public class EntityPaintThrown extends EntityThrowable {
     	ArrayList<BlockPos> posisionList = new ArrayList<>();
 		Random rand = new Random(id);
 		world.setEntityState(this, (byte)id);
-		int rad = rand.nextInt(5) + 2;
+		int rad = rand.nextInt(3) + 4;
 		for(int x = -rad; x < rad; x++) {
 			for(int y = -rad; y < rad; y++) {
 				for(int z = -rad; z < rad; z++) {
 					BlockPos pos = getPosition().add(x, y, z);
-					if(!WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
+					if(!WorldPaintConfig.GENERAL.getAllowedBlocks().contains(world.getBlockState(pos).getBlock())) {
 						continue;
 					}
 					posisionList.add(pos);
-					if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
-						WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
-					}
+					WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+
 				}
 			}
 		}	
@@ -91,7 +90,7 @@ public class EntityPaintThrown extends EntityThrowable {
 				for(int y = -rad; y < rad; y++) {
 					for(int z = -rad; z < rad; z++) {
 						BlockPos pos = getPosition().add(x, y, z);
-						if(!WorldPaintHooks.allowedBlocks.contains(world.getBlockState(pos).getBlock())) {
+						if(!WorldPaintConfig.GENERAL.getAllowedBlocks().contains(world.getBlockState(pos).getBlock())) {
 							continue;
 						}
 						if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {

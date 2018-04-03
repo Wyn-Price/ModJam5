@@ -1,7 +1,12 @@
 package com.wynprice.modjam5.common;
 
+import java.util.ArrayList;
+
+import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -26,6 +31,58 @@ public class WorldPaintConfig {
 		@Config.Name("color_blend")
 		@Config.RangeInt(min=0,max=100)
 		public int colorBlend = 1;
+		
+		@Config.Comment("The chance that, per random tick on a painted block, the block will spread")
+		@Config.Name("spread_change")
+		public float spreadChance;
+		
+		@Config.Comment("The list of blocks that can have paint spreaded to them. These will also be the blocks that determin if a color effect is used or not")
+		@Config.Name("spreadable_blocks")
+		public String[] allowedBlocks = {
+				"minecraft:grass",
+				"minecraft:dirt",
+				"minecraft:farmland",
+				
+				"minecraft:leaves",
+				"minecraft:leaves2",
+				
+				"minecraft:log",
+				"minecraft:log2",
+				
+				"minecraft:water",
+				"minecraft:flowing_water",
+				
+				"minecraft:vine",
+				"minecraft:waterlily",
+				
+				"minecraft:tallgrass",
+				"minecraft:double_plant",
+				"minecraft:reeds",
+				"minecraft:wheat"
+		};
+		
+		@Config.Comment("The minimum and maximum size for the paint explosion caused by the EntityPaintThrown. This is the distance from the hit position, to the edge. Meaning the box that is created is double this length")
+		@Config.Name("min_paint_explosion_size")
+		public int minPaintExplosion = 4;		
+		@Config.Name("max_paint_explosion_size")
+		public int maxPaintExplosion = 7;
+		
+		@Config.Ignore
+		ArrayList<Block> cache = null;
+		
+		public ArrayList<Block> getAllowedBlocks() {
+			if(cache == null) {
+				cache = new ArrayList<>();
+				for(String string : allowedBlocks) {
+					Block block = Block.getBlockFromName(string);
+					if(block == null || block == Blocks.AIR) {
+						continue;
+					}
+					cache.add(block);
+				}
+			}
+			return cache;
+		}
 	}
 	
 	public static class ColorFunctions {
@@ -69,7 +126,7 @@ public class WorldPaintConfig {
 	
 		@Config.Comment("When the areas painted pink, the probability that, on a random block tick, a peacfull mob will spawn")
 		@Config.Name("pink_chance_spawn_peacfull")
-		public float pinkSpawnPeacfull = 0.05f;
+		public float pinkSpawnPeacfull = 0.005f;
 	
 		@Config.Comment("Should any entity in a purple painted area be given strength")
 		@Config.Name("purple_strength")
@@ -215,6 +272,7 @@ public class WorldPaintConfig {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if(WorldPaint.MODID.equals(event.getConfigID())) {
             ConfigManager.sync(WorldPaint.MODID, Config.Type.INSTANCE);
+            GENERAL.cache = null;
         }
     }
 }

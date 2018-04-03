@@ -2,6 +2,7 @@ package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.block.material.Material;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-public class ItemPainingBoots extends ItemArmor {
+public class ItemPainingBoots extends ItemArmor implements IColorToolTip {
 
 	public static final ArmorMaterial MATERIAL = EnumHelper.addArmorMaterial("PAINTINGBOOTS", WorldPaint.MODID + ":paintingboots", 33, new int[]{3, 6, 8, 3}, 10, SoundEvents.BLOCK_CLOTH_BREAK, 2.0F);
 	

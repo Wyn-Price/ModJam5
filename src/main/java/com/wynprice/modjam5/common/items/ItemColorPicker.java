@@ -1,6 +1,7 @@
 package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.client.gui.GuiColorWheel;
+import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemColorPicker extends Item {
+public class ItemColorPicker extends Item implements IColorToolTip{
 	
 	public ItemColorPicker() {
 		this.setRegistryName("color_picker");
