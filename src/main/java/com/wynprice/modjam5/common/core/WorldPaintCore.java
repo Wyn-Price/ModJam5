@@ -2,7 +2,6 @@ package com.wynprice.modjam5.common.core;
 
 import java.util.Map;
 
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.Name(value = "World Paint Core")

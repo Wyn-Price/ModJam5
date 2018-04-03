@@ -2,7 +2,6 @@ package com.wynprice.modjam5.common;
 
 import java.util.ArrayList;
 
-import com.google.common.collect.Lists;
 import com.wynprice.modjam5.WorldPaint;
 
 import net.minecraft.block.Block;

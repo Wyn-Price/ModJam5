@@ -1,7 +1,6 @@
 package com.wynprice.modjam5.common.colorfunctionality.colors;
 
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 public class NoneColor extends ColorFunction {
 

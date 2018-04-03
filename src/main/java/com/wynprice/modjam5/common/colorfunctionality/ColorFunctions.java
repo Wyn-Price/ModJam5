@@ -2,7 +2,6 @@ package com.wynprice.modjam5.common.colorfunctionality;
 
 import java.util.ArrayList;
 
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorBlack;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorBlue;
 import com.wynprice.modjam5.common.colorfunctionality.colors.ColorGray;

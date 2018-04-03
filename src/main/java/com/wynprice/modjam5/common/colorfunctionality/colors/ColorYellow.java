@@ -1,24 +1,15 @@
 package com.wynprice.modjam5.common.colorfunctionality.colors;
 
-import java.util.Random;
 import java.util.UUID;
 
 import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
 
-import io.netty.channel.embedded.EmbeddedChannel;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class ColorYellow extends ColorFunction {
 

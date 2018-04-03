@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
@@ -12,17 +11,12 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import scala.util.control.Exception;
 
 public class ColorGreen extends ColorFunction {
 

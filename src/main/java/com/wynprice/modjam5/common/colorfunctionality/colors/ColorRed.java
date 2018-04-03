@@ -1,10 +1,8 @@
 package com.wynprice.modjam5.common.colorfunctionality.colors;
 
-import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

@@ -5,10 +5,8 @@ import com.wynprice.modjam5.common.registries.WorldPaintItems;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class RenderPaintThrown extends RenderSnowball<EntityPaintThrown>{

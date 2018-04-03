@@ -14,22 +14,18 @@ import com.wynprice.modjam5.common.network.packets.MessagePacketColorGuiClosed;
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
 import com.wynprice.modjam5.common.utils.ColorUtils;
 
-import net.minecraft.block.BlockStairs.EnumHalf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.client.config.GuiSlider;
 
 public class GuiColorWheel extends GuiScreen
 {

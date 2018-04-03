@@ -4,11 +4,7 @@ import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.entities.EntityPaintThrown;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

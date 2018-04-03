@@ -1,15 +1,12 @@
 package com.wynprice.modjam5.client.particles;
 
 import com.wynprice.modjam5.common.registries.WorldPaintItems;
-import com.wynprice.modjam5.common.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class ParticleThrownEntityPaintExplosion extends Particle {

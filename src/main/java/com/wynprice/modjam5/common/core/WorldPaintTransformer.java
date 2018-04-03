@@ -1,6 +1,5 @@
 package com.wynprice.modjam5.common.core;
 
-import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 import org.objectweb.asm.ClassReader;

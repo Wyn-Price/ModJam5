@@ -2,7 +2,6 @@ package com.wynprice.modjam5.common.utils;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;

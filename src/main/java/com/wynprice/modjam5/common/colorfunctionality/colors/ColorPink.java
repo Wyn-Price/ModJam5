@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
