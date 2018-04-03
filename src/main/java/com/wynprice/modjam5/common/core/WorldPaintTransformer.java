@@ -26,7 +26,7 @@ public class WorldPaintTransformer implements IClassTransformer {
 	
 	private final Consumer<ClassNode> BiomeColorHelper = (node) -> {
 		for(MethodNode method : node.methods) {
-			if(method.name.equals(getName("getColorAtPos", "func_180285_a "))) {
+			if(method.name.equals(getName("getColorAtPos", "func_180285_a"))) {
 				AbstractInsnNode ins = method.instructions.get(method.instructions.size() - 2);
 				if(ins.getOpcode() == Opcodes.IRETURN) {
 					InsnList list = new InsnList();

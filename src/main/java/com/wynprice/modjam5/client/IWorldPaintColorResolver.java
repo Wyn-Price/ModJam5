@@ -4,5 +4,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 
 public interface IWorldPaintColorResolver {
-    int getColorAtPos(Biome biome, BlockPos blockPosition);
+    default int getColorAtPos(Biome biome, BlockPos blockPosition) {
+    	return -1;
+    }
+    
+    default int func_180283_a(Biome biome, BlockPos blockPosition) {
+    	return -1;
+    }
 }

@@ -3,7 +3,7 @@ itemGroup.worldpaint=World Paint
 
 #Items
 item.paintingboots.name=Painting Boots
-item.paint.name=Throwable Paint
+item.paint.name=Paint
 item.paint_scrubber.name=Paint Scrubber
 item.paintbrush.name=Paintbrush
 item.color_picker.name=Color Picker
