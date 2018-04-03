@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
 
 import net.minecraft.entity.Entity;
@@ -22,7 +23,7 @@ public class ColorBlack extends ColorFunction {
 	@Override
 	public void onBlockTick(World world, BlockPos pos) {
 		Random random = new Random();
-		if(random.nextFloat() < 0.005f) {//TODO config
+		if(random.nextFloat() < WorldPaintConfig.COLOR_FUNCTIONS.blackSpawnHostile) {
 			Biome biome = world.getBiome(pos);
 			List<SpawnListEntry> spawnList = biome.getSpawnableList(EnumCreatureType.MONSTER);
 			SpawnListEntry entry = spawnList.get(random.nextInt(spawnList.size()));
@@ -41,7 +42,7 @@ public class ColorBlack extends ColorFunction {
 	@Override
 	public boolean shouldApply(float[] hsb) {
 		Color color = new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
-		return Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue())) < 55;
+		return Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue())) < WorldPaintConfig.COLOR_VALUES.blackDropOff;
 	}
 
 }

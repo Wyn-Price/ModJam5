@@ -2,7 +2,9 @@ package com.wynprice.modjam5.common.colorfunctionality.colors;
 
 import java.util.Random;
 
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
+import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
@@ -25,13 +27,13 @@ import scala.util.control.Exception;
 public class ColorGreen extends ColorFunction {
 
 	public ColorGreen() {
-		super(70f, 153f, RangeType.HUE);
+		super(WorldPaintConfig.COLOR_VALUES.greenMin, WorldPaintConfig.COLOR_VALUES.greenMax, RangeType.HUE);
 	}
 	
 	@Override
 	public void onBlockTick(World world, BlockPos pos) {
 		int commandId = new Random().nextInt(3);
-		if(commandId == 0) {
+		if(commandId == 0 && new Random().nextFloat() < WorldPaintConfig.COLOR_FUNCTIONS.greenBonemealArea) {
 			EnumFacing face = EnumFacing.getFront(new Random().nextInt());
 			if(world.getBlockState(pos.offset(face)).getBlock() instanceof IGrowable) {
 				if(ItemDye.applyBonemeal(ItemStack.EMPTY, world, pos.offset(face))) {
@@ -41,13 +43,13 @@ public class ColorGreen extends ColorFunction {
 					return;
 				}
 			}
-		} else if(commandId == 1) {
+		} else if(commandId == 1 && WorldPaintConfig.COLOR_FUNCTIONS.greenChangeDirt) {
 			EnumFacing face2 = EnumFacing.getFront(new Random().nextInt());
 			if(world.getBlockState(pos.offset(face2)).getBlock() == Blocks.DIRT) {
 				world.setBlockState(pos.offset(face2), Blocks.GRASS.getDefaultState());
 			}
 		} else if(commandId == 2) {
-			if(world.getBlockState(pos).getBlock() instanceof BlockLeaves && new Random().nextFloat() < 0.05f) { //Terrible code. I dont care. //TODO config and sort out 
+			if(world.getBlockState(pos).getBlock() instanceof BlockLeaves && new Random().nextFloat() < WorldPaintConfig.COLOR_FUNCTIONS.greenPlantSaplings) { 
 				for(IProperty<?> property : world.getBlockState(pos).getBlock().getBlockState().getProperties()) {
 					if(property.getValueClass() == BlockPlanks.EnumType.class) {
 						BlockPlanks.EnumType enu = (BlockPlanks.EnumType) world.getBlockState(pos).getValue(property);

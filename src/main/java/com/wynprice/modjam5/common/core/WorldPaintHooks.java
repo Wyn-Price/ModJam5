@@ -7,6 +7,7 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.colorfunctionality.ColorBehaviourEventDispatcher;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
@@ -88,7 +89,7 @@ public class WorldPaintHooks {
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
 		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
 		if(!info.isDefault() && allowedBlocks.contains(block)) {
-			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE) {
+			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
 				return entity instanceof EntityItem ? 1f : 1.05f;
 			}
 		}
@@ -104,7 +105,7 @@ public class WorldPaintHooks {
 				info = WorldColorsHandler.getInfo(worldIn, position);
 			}
 		}
-		if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.BLUE && !entityIn.isSneaking()) {
+		if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.BLUE && !entityIn.isSneaking() && WorldPaintConfig.COLOR_FUNCTIONS.blueBouncyBlocks) {
 			entityIn.motionY = -entityIn.motionY * 0.9f;
 			return;
 		}

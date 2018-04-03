@@ -6,11 +6,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ColorFunction {
-	protected final float minRange;
-	protected final float maxRange;
+	protected double minRange;
+	protected double maxRange;
 	protected final RangeType rangeType;
 	
-	public ColorFunction(float min, float max, RangeType type) {
+	public ColorFunction(double min, double max, RangeType type) {
 		this.minRange = min;
 		this.maxRange = max;
 		this.rangeType = type;
@@ -42,11 +42,6 @@ public class ColorFunction {
 	 */
 	public void onAwayMobTick(EntityLivingBase entity) {
 		
-	}
-
-	@Deprecated //TODO remove before release
-	public boolean lastResort() {
-		return false;
 	}
 	
 	public boolean shouldApply(float[] hsb) {

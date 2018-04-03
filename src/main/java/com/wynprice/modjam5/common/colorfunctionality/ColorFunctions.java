@@ -30,7 +30,7 @@ public class ColorFunctions {
 	public static final ColorFunction GRAY = register(new ColorGray());
 	public static final ColorFunction ORANGE = register(new ColorOrange());
 	public static final ColorFunction BLACK = register(new ColorBlack());
-	public static final ColorFunction PINk = register(new ColorPink());
+	public static final ColorFunction PINK = register(new ColorPink());
 
 	private static ColorFunction register(ColorFunction function) {
 		ALL_FUNCTIONS.add(function);

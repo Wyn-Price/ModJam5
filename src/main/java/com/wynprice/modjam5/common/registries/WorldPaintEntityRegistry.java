@@ -23,7 +23,7 @@ public class WorldPaintEntityRegistry {
 		event.getRegistry().registerAll(
 				EntityEntryBuilder.create()
 				.entity(EntityPaintThrown.class)
-				.id(new ResourceLocation(WorldPaint.MODID, "thrown_paint"), WorldPaintConfig.entityThrownID)
+				.id(new ResourceLocation(WorldPaint.MODID, "thrown_paint"), WorldPaintConfig.GENERAL.entityThrownID)
 				.name("thrown_paint")
 				.factory(EntityPaintThrown::new)
 				.tracker(128, 20, true)

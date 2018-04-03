@@ -22,7 +22,7 @@ public class WorldPaintHooksClient {
 		int i = 0;
 		int j = 0;
 		int k = 0;
-		int blend = 1; //TODO config
+		int blend = 1;
 		int defaultcol = 0x2D3FF4;
 		int times = 0;
 		for (BlockPos.MutableBlockPos blockpos$mutableblockpos : BlockPos.getAllInBoxMutable(pos.add(-blend, -blend, -blend), pos.add(blend, blend, blend)))

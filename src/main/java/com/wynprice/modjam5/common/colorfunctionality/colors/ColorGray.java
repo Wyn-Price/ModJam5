@@ -7,7 +7,9 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.sun.jna.platform.win32.WinUser.WNDENUMPROC;
+import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.WorldPaintConfig;
 import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
@@ -40,8 +42,8 @@ public class ColorGray extends ColorFunction {
 			DataInfomation info = WorldColorsHandler.getInfo(world, entry.getPos().down());
 			if(!info.isDefault()) {
 				ColorFunction function = ColorUtils.findClosestPaletteColorTo(info.getColor());
-				if(function == this && entry instanceof TileEntityFurnace && new Random().nextFloat() < 0.5f) { //TODO config
-					for(int i2 = 0; i2 < 5; i2++) {//TODO config
+				if(function == this && entry instanceof TileEntityFurnace && new Random().nextFloat() < WorldPaintConfig.COLOR_FUNCTIONS.grayFurnaceSmelt) { 
+					for(int i2 = 0; i2 < WorldPaintConfig.COLOR_FUNCTIONS.grayFurnaceAmount; i2++) {
 						((TileEntityFurnace) entry).update();
 					}
 				}
@@ -89,8 +91,8 @@ public class ColorGray extends ColorFunction {
 	@Override
 	public boolean shouldApply(float[] hsb) {
 		Color color = new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
-		return Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue())) > 55 && Math.min(color.getRed(), Math.min(color.getGreen(), color.getBlue())) < 200 && 
-				((Math.abs(color.getRed() - color.getGreen())) + (Math.abs(color.getGreen() - color.getBlue()))) / 2f < 15;
+		return Math.max(color.getRed(), Math.max(color.getGreen(), color.getBlue())) > WorldPaintConfig.COLOR_VALUES.grayMin && Math.min(color.getRed(), Math.min(color.getGreen(), color.getBlue())) < WorldPaintConfig.COLOR_VALUES.grayMax && 
+				((Math.abs(color.getRed() - color.getGreen())) + (Math.abs(color.getGreen() - color.getBlue()))) / 2f < WorldPaintConfig.COLOR_VALUES.grayRange;
 	}
 
 }
