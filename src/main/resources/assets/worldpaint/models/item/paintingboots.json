@@ -1,0 +1,7 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "worldpaint:items/paintingboots_fill",
+        "layer1": "worldpaint:items/paintingboots_overlay"
+    }
+}
