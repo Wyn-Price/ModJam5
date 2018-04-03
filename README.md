@@ -39,23 +39,33 @@ Crafting:<br>
 <img src="https://imgur.com/YFB6vYR.png"></img>
 
 ## Color functionalities
+**All Functions are configurable**
 # Black
-<img src="https://imgur.com/bkv9ePh.png" height=200px></img>
+Spawns hostile mobs per random block tick, with a configurable chance
+<br><img src="https://imgur.com/bkv9ePh.png" height=200px></img>
 # Blue
-<img src="https://imgur.com/bf2hh98.png" height=200px></img>
+Blue is bouncy, and gives the player a jump boost
+<br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
 # Gray
-<img src="https://imgur.com/nMnDbfm.png" height=200px></img>
+Speeds up furnaces that are placed above a gray painted area by a configurable amount
+<br><img src="https://imgur.com/nMnDbfm.png" height=200px></img>
 # Green
-<img src="https://imgur.com/gTMv31Y.png" height=200px></img>
+Turns dirt to grass, applys a bonemeal effect to blocks. Causes trees to spread leaves into saplings
+<br><img src="https://imgur.com/gTMv31Y.png" height=200px></img>
 # Orange
-<img src="https://imgur.com/K514qE5.png" height=200px></img>
+Orange is incredibly.
+<br><img src="https://imgur.com/K514qE5.png" height=200px></img>
 # Pink
-<img src="https://imgur.com/M7xXxM1.png" height=200px></img>
+Spawns non hostile mobs per random block tick, with a configurable chance
+<br><img src="https://imgur.com/M7xXxM1.png" height=200px></img>
 # Purple
-<img src="https://imgur.com/WRlkJdC.png" height=200px></img>
+Gives mobs strength
+<br><img src="https://imgur.com/WRlkJdC.png" height=200px></img>
 # Red
-<img src="https://imgur.com/04nvpAO.png" height=200px></img>
+Burns non undead mobs, and extinguishes undead mobs
+<br><img src="https://imgur.com/04nvpAO.png" height=200px></img>
 # White
-<img src="https://imgur.com/9hCfxkH.png" height=200px></img>
+Gives the invisability effect
+<br><img src="https://imgur.com/9hCfxkH.png" height=200px></img>
 # Yellow
-<img src="https://imgur.com/bf2hh98.png" height=200px></img>
+<br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
