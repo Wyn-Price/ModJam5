@@ -46,7 +46,7 @@ Spawns hostile mobs per random block tick, with a configurable chance
 <br><img src="https://imgur.com/bkv9ePh.png" height=200px></img>
 ## Blue
 Blue is bouncy, and gives the player a jump boost
-<br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
+<br><img src="https://i.imgur.com/u6eeYKw.png.png" height=200px></img>
 ## Gray
 Speeds up furnaces that are placed above a gray painted area by a configurable amount
 <br><img src="https://imgur.com/nMnDbfm.png" height=200px></img>
