@@ -38,35 +38,35 @@ The paint scrubber can be used to remove paint from the world. Simply click the 
 Crafting:<br>
 <img src="https://imgur.com/YFB6vYR.png"></img>
 
-## Color functionalities
+# Color functionalities
 **All Functions are configurable**
-# Black
+## Black
 Spawns hostile mobs per random block tick, with a configurable chance
 <br><img src="https://imgur.com/bkv9ePh.png" height=200px></img>
-# Blue
+## Blue
 Blue is bouncy, and gives the player a jump boost
 <br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
-# Gray
+## Gray
 Speeds up furnaces that are placed above a gray painted area by a configurable amount
 <br><img src="https://imgur.com/nMnDbfm.png" height=200px></img>
-# Green
+## Green
 Turns dirt to grass, applys a bonemeal effect to blocks. Causes trees to spread leaves into saplings
 <br><img src="https://imgur.com/gTMv31Y.png" height=200px></img>
-# Orange
+## Orange
 Orange is incredibly.
 <br><img src="https://imgur.com/K514qE5.png" height=200px></img>
-# Pink
+## Pink
 Spawns non hostile mobs per random block tick, with a configurable chance
 <br><img src="https://imgur.com/M7xXxM1.png" height=200px></img>
-# Purple
+## Purple
 Gives mobs strength
 <br><img src="https://imgur.com/WRlkJdC.png" height=200px></img>
-# Red
+## Red
 Burns non undead mobs, and extinguishes undead mobs
 <br><img src="https://imgur.com/04nvpAO.png" height=200px></img>
-# White
+## White
 Gives the invisability effect
 <br><img src="https://imgur.com/9hCfxkH.png" height=200px></img>
-# Yellow
+## Yellow
 Feeds the player and gives them a configurable health boost
 <br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
