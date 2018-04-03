@@ -21,7 +21,8 @@ public class ColorUtils {
 
             if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
             {
-                return nbttagcompound1.getInteger("color");
+                return nbttagcompound1.getInteger("color") & 0xFFFFFF
+;
             }
         }
 
