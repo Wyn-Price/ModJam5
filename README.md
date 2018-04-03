@@ -40,16 +40,22 @@ Crafting:<br>
 
 ## Color functionalities
 # Black
+<img src="https://imgur.com/bkv9ePh.png"></img>
 # Blue
+<img src="https://imgur.com/bf2hh98.png"></img>
 # Gray
+<img src="https://imgur.com/nMnDbfm.png"></img>
 # Green
+<img src="https://imgur.com/gTMv31Y.png"></img>
 # Orange
+<img src="https://imgur.com/K514qE5.png"></img>
 # Pink
+<img src="https://imgur.com/M7xXxM1.png"></img>
 # Purple
+<img src="https://imgur.com/WRlkJdC.png"></img>
 # Red
+<img src="https://imgur.com/04nvpAO.png"></img>
 # White
+<img src="https://imgur.com/9hCfxkH.png"></img>
 # Yellow
-
-
-
-
+<img src="https://imgur.com/bf2hh98.png"></img>
