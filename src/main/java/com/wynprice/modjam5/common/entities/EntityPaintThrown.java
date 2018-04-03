@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.wynprice.modjam5.client.particles.ParticleThrownEntityPaintExplosion;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldPaintConfig;
-import com.wynprice.modjam5.common.core.WorldPaintHooks;
 import com.wynprice.modjam5.common.utils.BlockPosHelper;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,7 +54,7 @@ public class EntityPaintThrown extends EntityThrowable {
 						continue;
 					}
 					posisionList.add(pos);
-					WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+					WorldColorsHandler.putInfo(this.world, pos, new DataInfomation(color, true, getPosition(), new int[0]), false);
 
 				}
 			}
@@ -94,7 +94,7 @@ public class EntityPaintThrown extends EntityThrowable {
 							continue;
 						}
 						if(getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < rad || rand.nextFloat() < 0.3f) {
-							WorldColorsHandler.putInfo(this.world, pos, new WorldColorsHandler.DataInfomation(color, true, getPosition(), new int[0]), false);
+							WorldColorsHandler.putInfo(this.world, pos, new DataInfomation(color, true, getPosition(), new int[0]), false);
 						}
 					}
 				}

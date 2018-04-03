@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class WorldPaintHooksClient {
 	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) { //Needed colorResolver to be string as the class is inaccessable
 		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
-		WorldColorsHandler.DataInfomation in = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, pos);
+		DataInfomation in = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, pos);
 		if(in != null && !in.isDefault() && !in.isSpreadable()) {
 			return in.getColor();
 		}
@@ -29,8 +30,8 @@ public class WorldPaintHooksClient {
 		{
 			times++;
 			int l = resolver.getColorAtPos(blockAccess.getBiome(blockpos$mutableblockpos), blockpos$mutableblockpos);
-			WorldColorsHandler.DataInfomation info = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, blockpos$mutableblockpos);
-			if(info == null) info = WorldColorsHandler.DataInfomation.DEFAULT;
+			DataInfomation info = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, blockpos$mutableblockpos);
+			if(info == null) info = DataInfomation.DEFAULT;
 			if(!info.isDefault()) {
 				l = info.getColor();
 			} else if(type == 3) {

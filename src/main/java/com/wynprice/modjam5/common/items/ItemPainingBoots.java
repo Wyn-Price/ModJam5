@@ -4,6 +4,7 @@ import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 import com.wynprice.modjam5.common.utils.ColorUtils;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.init.SoundEvents;
@@ -45,7 +46,7 @@ public class ItemPainingBoots extends ItemArmor implements IColorToolTip {
 					BlockPos pos = event.player.getPosition().down();
 					ItemStack stack = event.player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 					if(event.player.world.getBlockState(pos).getMaterial() != Material.AIR) {
-						WorldColorsHandler.putInfo(event.player.world, pos, new WorldColorsHandler.DataInfomation(((ItemPainingBoots)stack.getItem()).getColor(stack), true, pos, new int[0]), true);
+						WorldColorsHandler.putInfo(event.player.world, pos, new DataInfomation(((ItemPainingBoots)stack.getItem()).getColor(stack), true, pos, new int[0]), true);
 					}
 				}
 			}

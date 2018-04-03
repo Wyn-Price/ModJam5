@@ -1,15 +1,12 @@
 package com.wynprice.modjam5.common.network.packets;
 
-import com.sun.jna.platform.unix.X11.XClientMessageEvent.Data;
 import com.wynprice.modjam5.common.WorldColorsHandler;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.network.MessagePacket;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessagePacketSingleBlockUpdate extends MessagePacket<MessagePacketSingleBlockUpdate> {
 

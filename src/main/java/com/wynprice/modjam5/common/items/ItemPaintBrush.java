@@ -1,12 +1,11 @@
 package com.wynprice.modjam5.common.items;
 
 import com.wynprice.modjam5.common.WorldColorsHandler;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.handlers.ColorToolTipHandler.IColorToolTip;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSingleBlockUpdate;
-import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 import com.wynprice.modjam5.common.utils.ColorUtils;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
