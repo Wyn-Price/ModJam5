@@ -54,7 +54,7 @@ Speeds up furnaces that are placed above a gray painted area by a configurable a
 Turns dirt to grass, applys a bonemeal effect to blocks. Causes trees to spread leaves into saplings
 <br><img src="https://imgur.com/gTMv31Y.png" height=200px></img>
 ## Orange
-Orange is incredibly.
+Orange is incredibly Slippery.
 <br><img src="https://imgur.com/K514qE5.png" height=200px></img>
 ## Pink
 Spawns non hostile mobs per random block tick, with a configurable chance
