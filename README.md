@@ -1,13 +1,13 @@
 # ModJam 2008.1 Entry - World Paint - By Wyn Price
-World Paint is a mod made for Modjam. It makes the world "paintable", with the diffrent colors having diffrent effects. The list of effects can be found here
+World Paint is a mod made for Modjam. It makes the world "paintable", with the diffrent colors having diffrent effects. The list of effects can be found [here](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#color-functionalities)
 
 # Items
 World Paint adds 5 items to the game
- - Paint
- - Paintbrush
- - Painting Boots
- - Color Picker
- - Paint Scrubber
+ - [Paint](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#paint)
+ - [Paintbrush](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#paintbrush)
+ - [Painting Boots](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#painting-boots)
+ - [Color Picker](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#color-picker)
+ - [Paint Scrubber](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#paint-scrubber)
 
 ## Paint
 Paint, unlike what would seem, is not a crafting item. Paint be thrown, and will color the area around it when it lands.<br>
