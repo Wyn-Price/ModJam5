@@ -68,4 +68,5 @@ Burns non undead mobs, and extinguishes undead mobs
 Gives the invisability effect
 <br><img src="https://imgur.com/9hCfxkH.png" height=200px></img>
 # Yellow
+Feeds the player and gives them a configurable health boost
 <br><img src="https://imgur.com/bf2hh98.png" height=200px></img>
