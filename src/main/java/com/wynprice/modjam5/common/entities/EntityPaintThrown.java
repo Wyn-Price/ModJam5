@@ -85,7 +85,7 @@ public class EntityPaintThrown extends EntityThrowable {
 			int id = new Random().nextInt();
 			Random rand = new Random(id);
 			world.setEntityState(this, (byte)id);
-			int rad = rand.nextInt(5) + 2;
+			int rad = rand.nextInt(WorldPaintConfig.GENERAL.maxPaintExplosion - WorldPaintConfig.GENERAL.minPaintExplosion) + WorldPaintConfig.GENERAL.minPaintExplosion;
 			for(int x = -rad; x < rad; x++) {
 				for(int y = -rad; y < rad; y++) {
 					for(int z = -rad; z < rad; z++) {
