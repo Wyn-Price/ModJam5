@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shaped",
+  "group": "worldpaint_color_picker",
+  "pattern": [
+    "  I",  
+    " I ",
+    "N  "
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "N": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    }
+  },
+  "result": {
+    "item": "worldpaint:color_picker"
+  }
+}

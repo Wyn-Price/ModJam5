@@ -16,7 +16,7 @@ public class WorldPaintRecipes {
 	public static void onRecipeRegister(RegistryEvent.Register<IRecipe> event) {
 		event.getRegistry().registerAll( //Why are you doing Suppliers ?
 				new RecipeColorItem("paintboots", () -> WorldPaintItems.PAINTING_BOOTS),
-				new RecipeColorItem("colored_paint", () -> WorldPaintItems.THROWABLE_PAINT),
+				new RecipeColorItem("colored_paint", () -> WorldPaintItems.PAINT),
 				new RecipeColorItem("paintbrush", () -> WorldPaintItems.PAINTBRUSH),
 				new RecipeColorItem("vanilla_boots", () -> Items.LEATHER_BOOTS),
 				new RecipeColorItem("vanilla_chestpiece", () -> Items.LEATHER_CHESTPLATE),

@@ -17,11 +17,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class ItemThrowablePaint extends Item implements IColorToolTip {
-    public ItemThrowablePaint() {
+public class ItemPaint extends Item implements IColorToolTip {
+    public ItemPaint() {
         this.maxStackSize = 16;
-        this.setRegistryName("throwable_paint");
-        this.setUnlocalizedName("throwable_paint");
+        this.setRegistryName("paint");
+        this.setUnlocalizedName("paint");
     }
 
     /**

@@ -19,6 +19,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class WorldPaintHooks {
@@ -57,14 +58,16 @@ public class WorldPaintHooks {
 		}
 	}
 	
-	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
-		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
-		if(!info.isDefault() && WorldPaintConfig.GENERAL.getAllowedBlocks().contains(block)) {
-			if(ColorUtils.calculateClosestColor(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
-				return entity instanceof EntityItem ? 1f : 1.05f;
+	public static float getBlockSlipperiness(Block block, IBlockState state, IBlockAccess world, BlockPos pos, Entity entity, float deafault) {
+		if(world instanceof World) {
+			DataInfomation info = WorldColorsHandler.getInfo((World)world, pos);
+			if(!info.isDefault() && WorldPaintConfig.GENERAL.getAllowedBlocks().contains(block)) {
+				if(ColorUtils.calculateClosestColor(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
+					return entity instanceof EntityItem ? 1f : 1.05f;
+				}
 			}
 		}
-		return block.getSlipperiness(state, world, pos, entity);
+		return deafault;
 	}
 	
 	public static void onLanded(Block block, World worldIn, Entity entityIn) {

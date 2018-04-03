@@ -12,11 +12,11 @@ import net.minecraft.item.ItemStack;
 public class RenderPaintThrown extends RenderSnowball<EntityPaintThrown>{
 
 	public RenderPaintThrown(RenderManager renderManagerIn) {
-		super(renderManagerIn, WorldPaintItems.THROWABLE_PAINT, Minecraft.getMinecraft().getRenderItem());
+		super(renderManagerIn, WorldPaintItems.PAINT, Minecraft.getMinecraft().getRenderItem());
 	}
 	
 	@Override
 	public ItemStack getStackToRender(EntityPaintThrown entityIn) {
-		return ColorUtils.setColor(new ItemStack(WorldPaintItems.THROWABLE_PAINT), entityIn.getColor());
+		return ColorUtils.setColor(new ItemStack(WorldPaintItems.PAINT), entityIn.getColor());
 	}
 }

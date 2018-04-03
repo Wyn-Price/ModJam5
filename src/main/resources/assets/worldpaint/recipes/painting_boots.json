@@ -1,0 +1,15 @@
+{
+  "type": "forge:ore_shapeless",
+  "group": "worldpaint_painting_boots",
+  "ingredients": [
+    {
+     "item": "minecraft:leather_boots"
+    },
+    {
+      "item": "worldpaint:paintbrush"
+    }
+  ],
+  "result": {
+    "item": "worldpaint:paintingboots"
+  }
+}

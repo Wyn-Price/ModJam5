@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shapeless",
+  "group": "worldpaint_paint",
+  "ingredients": [
+    {
+     "item": "minecraft:water_bucket"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "slimeball"
+    },
+    {
+       "type": "forge:ore_dict",
+      "ore": "slimeball"
+    },
+    {
+       "type": "forge:ore_dict",
+      "ore": "slimeball"
+    }
+  ],
+  "result": {
+    "item": "worldpaint:paint"
+  }
+}

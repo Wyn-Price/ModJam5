@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 public class ParticleThrownEntityPaintExplosion extends Particle {
 
-	private static final TextureAtlasSprite sprite = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getParticleIcon(WorldPaintItems.THROWABLE_PAINT);
+	private static final TextureAtlasSprite sprite = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getParticleIcon(WorldPaintItems.PAINT);
 	
 	public ParticleThrownEntityPaintExplosion(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn,
 			double xSpeedIn, double ySpeedIn, double zSpeedIn, int color) {

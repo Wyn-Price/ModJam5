@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "group": "worldpaint_paintbrush",
+  "pattern": [
+    "S",
+    "N",
+    "T"
+  ],
+  "key": {
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "string"
+    },
+    "N": {
+      "type": "forge:ore_dict",
+      "ore": "nuggetIron"
+    },
+    "T": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    }
+  },
+  "result": {
+    "item": "worldpaint:paintbrush"
+  }
+}

@@ -78,30 +78,27 @@ public class WorldPaintTransformer implements IClassTransformer {
 		}
 	};
 	
-	private final Consumer<MethodNode> METHODTRANSFORMER = (method) -> {
-		for(int i = 0; i < method.instructions.size(); i++) {
-			AbstractInsnNode ins = method.instructions.get(i);
-			if(ins instanceof MethodInsnNode && ins.getOpcode() == Opcodes.INVOKEVIRTUAL) {
-				MethodInsnNode mIns = (MethodInsnNode) ins;
-				if(mIns.owner.equals("net/minecraft/block/Block") && mIns.name.equals("getSlipperiness") && mIns.desc.equals("(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)F")) {
-					method.instructions.set(ins, new MethodInsnNode(Opcodes.INVOKESTATIC, "com/wynprice/modjam5/common/core/WorldPaintHooks", "getBlockSlipperiness", "(Lnet/minecraft/block/Block;Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)F", false));
-				}
-			}
-		}
-	};
-	
-	private final Consumer<ClassNode> EntityLivingBase = (node) -> {
+	private final Consumer<ClassNode> Block = (node) -> {
 		for(MethodNode method : node.methods) {
-			if(method.name.equals(getName("travel", "func_191986_a")) && method.desc.equals("(FFF)V")) {
-				METHODTRANSFORMER.accept(method);
-			}
-		}
-	};
-	
-	private final Consumer<ClassNode> EntityItem = (node) -> {
-		for(MethodNode method : node.methods) {
-			if(method.name.equals(getName("onUpdate", "func_70071_h_")) && method.desc.equals("()V")) {
-				METHODTRANSFORMER.accept(method);
+			if(method.name.equals("getSlipperiness") && method.desc.equals("(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)F")) {
+				AbstractInsnNode startLabel = method.instructions.getFirst();
+				AbstractInsnNode lineNumberLabel = method.instructions.get(1);
+				AbstractInsnNode endLabel = method.instructions.getLast();
+				InsnList list = new InsnList();
+				list.add(startLabel);
+				list.add(lineNumberLabel);
+				list.add(new VarInsnNode(Opcodes.ALOAD, 0));//block
+				list.add(new VarInsnNode(Opcodes.ALOAD, 1));//state
+				list.add(new VarInsnNode(Opcodes.ALOAD, 2));//world
+				list.add(new VarInsnNode(Opcodes.ALOAD, 3));//postion
+				list.add(new VarInsnNode(Opcodes.ALOAD, 4)); //entity
+				
+				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/block/Block", getName("slipperiness", "field_149765_K"), "F"));
+				list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "com/wynprice/modjam5/common/core/WorldPaintHooks", "getBlockSlipperiness", "(Lnet/minecraft/block/Block;Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;F)F", false));
+				list.add(new InsnNode(Opcodes.FRETURN));
+				list.add(endLabel);
+				method.instructions = list;
 			}
 		}
 	};
@@ -130,11 +127,9 @@ public class WorldPaintTransformer implements IClassTransformer {
 			basicClass = runConsumer((node) -> node.interfaces.add(Type.getInternalName(IWorldPaintColorResolver.class)), transformedName, basicClass);
 		}  else if(transformedName.equals("net.minecraft.world.WorldServer")) {
 			basicClass = runConsumer(WorldServer, transformedName, basicClass);
-		} else if(transformedName.equals("net.minecraft.entity.EntityLivingBase")) {
-			basicClass = runConsumer(EntityLivingBase, transformedName, basicClass);
-		} else if(transformedName.equals("net.minecraft.entity.item.EntityItem")) {
-			basicClass = runConsumer(EntityItem, transformedName, basicClass);
-		} else if(transformedName.equals("net.minecraft.entity.Entity")) {
+		} else if(transformedName.equals("net.minecraft.block.Block")) {
+			basicClass = runConsumer(Block, transformedName, basicClass);
+		}  else if(transformedName.equals("net.minecraft.entity.Entity")) {
 			basicClass = runConsumer(Entity, transformedName, basicClass);
 		}
 		return basicClass;
