@@ -5,7 +5,7 @@ import net.minecraft.world.biome.Biome;
 
 public interface IWorldPaintColorResolver {
     default int getColorAtPos(Biome biome, BlockPos blockPosition) {
-    	return -1;
+    	return func_180283_a(biome, blockPosition);
     }
     
     default int func_180283_a(Biome biome, BlockPos blockPosition) {

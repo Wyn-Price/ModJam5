@@ -146,18 +146,18 @@ public class WorldPaintConfig {
 		@Config.Comment("The Health Modifier Options for when in a yellow painted area.")
 		@Config.RequiresMcRestart
 		@Config.Name("yellow_modifier_operation")
-		public int yellowModifierOperation;
+		public int yellowModifierOperation = 1;
 		@Config.RequiresMcRestart
 		@Config.Name("yellow_modifier_amount")
-		public double yellowModifierAmount;
+		public double yellowModifierAmount = 0.5D;
 		
 		@Config.Comment("How many seconds it takes while in a yellow painted area for hunger to be refilled, and how much hunger and saturation is refilled")
 		@Config.Name("yellow_food_seconds")
-		public float yellowFoodSeconds;
+		public float yellowFoodSeconds = 20;
 		@Config.Name("yellow_food_level")
-		public int yellowFoodLevel;
+		public int yellowFoodLevel = 1;
 		@Config.Name("yellow_food_saturation")
-		public float yellowFoodSaturation;
+		public float yellowFoodSaturation = 1F;
 		
 	}
 	
