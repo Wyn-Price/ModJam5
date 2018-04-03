@@ -40,22 +40,22 @@ Crafting:<br>
 
 ## Color functionalities
 # Black
-<img src="https://imgur.com/bkv9ePh.png"></img>
+<img src="https://imgur.com/bkv9ePh.png" height=200px></img>
 # Blue
-<img src="https://imgur.com/bf2hh98.png"></img>
+<img src="https://imgur.com/bf2hh98.png" height=200px></img>
 # Gray
-<img src="https://imgur.com/nMnDbfm.png"></img>
+<img src="https://imgur.com/nMnDbfm.png" height=200px></img>
 # Green
-<img src="https://imgur.com/gTMv31Y.png"></img>
+<img src="https://imgur.com/gTMv31Y.png" height=200px></img>
 # Orange
-<img src="https://imgur.com/K514qE5.png"></img>
+<img src="https://imgur.com/K514qE5.png" height=200px></img>
 # Pink
-<img src="https://imgur.com/M7xXxM1.png"></img>
+<img src="https://imgur.com/M7xXxM1.png" height=200px></img>
 # Purple
-<img src="https://imgur.com/WRlkJdC.png"></img>
+<img src="https://imgur.com/WRlkJdC.png" height=200px></img>
 # Red
-<img src="https://imgur.com/04nvpAO.png"></img>
+<img src="https://imgur.com/04nvpAO.png" height=200px></img>
 # White
-<img src="https://imgur.com/9hCfxkH.png"></img>
+<img src="https://imgur.com/9hCfxkH.png" height=200px></img>
 # Yellow
-<img src="https://imgur.com/bf2hh98.png"></img>
+<img src="https://imgur.com/bf2hh98.png" height=200px></img>
