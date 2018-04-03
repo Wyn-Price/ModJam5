@@ -29,7 +29,7 @@ The Color Picker also can be used to color these items:
  - Painting Boots
  - Throwable paint
  - Leather Armour
- To color those items, simply put one of the items, and the color picker (with the picked color) into a crafting table **There is currently a bug where the crafting recipe does not check how many items are in the crafting table, meaning you can put 2 color pickers in the table, or 2 of the item you want to color**<br>
+<br>To color those items, simply put one of the items, and the color picker (with the picked color) into a crafting table **There is currently a bug where the crafting recipe does not check how many items are in the crafting table, meaning you can put 2 color pickers in the table, or 2 of the item you want to color**<br>
 Example:<br>
 <img src="https://i.imgur.com/uT2lnhT.gif"></img><br>
 Crafting:<br>
