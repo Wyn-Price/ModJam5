@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ColorRed extends ColorFunction {
 
 	public ColorRed() {
-		super(WorldPaintConfig.COLOR_VALUES.redMin, WorldPaintConfig.COLOR_VALUES.redMax, RangeType.HUE);
+		super("red", WorldPaintConfig.COLOR_VALUES.redMin, WorldPaintConfig.COLOR_VALUES.redMax, RangeType.HUE);
 	}
 
 	@Override

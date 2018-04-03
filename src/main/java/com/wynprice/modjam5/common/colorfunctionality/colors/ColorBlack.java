@@ -17,7 +17,7 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 public class ColorBlack extends ColorFunction {
 
 	public ColorBlack() {
-		super(0f, 0f, RangeType.HUE);
+		super("black", 0f, 0f, RangeType.HUE);
 	}
 	
 	@Override

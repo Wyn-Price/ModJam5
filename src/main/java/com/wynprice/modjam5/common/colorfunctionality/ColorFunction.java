@@ -6,14 +6,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ColorFunction {
-	protected double minRange;
-	protected double maxRange;
+	protected final double minRange;
+	protected final double maxRange;
 	protected final RangeType rangeType;
+	protected final String colorName;
 	
-	public ColorFunction(double min, double max, RangeType type) {
+	public ColorFunction(String colorName, double min, double max, RangeType type) {
 		this.minRange = min;
 		this.maxRange = max;
 		this.rangeType = type;
+		this.colorName = colorName;
 	}
 	
 	public void onMobTick(EntityLivingBase entity) {
@@ -51,6 +53,10 @@ public class ColorFunction {
 			flag = hsb[1] < 0.5f && hsb[2] > 0.5f; 
 		}
 		return value >= minRange && value <= maxRange;
+	}
+	
+	public String getColorName() {
+		return colorName;
 	}
 	
 	public enum RangeType {

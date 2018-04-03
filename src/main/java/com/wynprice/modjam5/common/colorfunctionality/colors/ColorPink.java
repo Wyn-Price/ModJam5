@@ -17,7 +17,7 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 public class ColorPink extends ColorFunction {
 
 	public ColorPink() {
-		super(WorldPaintConfig.COLOR_VALUES.pinkMin, WorldPaintConfig.COLOR_VALUES.pinkMax, RangeType.HUE);
+		super("pink", WorldPaintConfig.COLOR_VALUES.pinkMin, WorldPaintConfig.COLOR_VALUES.pinkMax, RangeType.HUE);
 	}
 	
 	@Override

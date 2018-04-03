@@ -6,7 +6,7 @@ import com.wynprice.modjam5.common.colorfunctionality.ColorFunction.RangeType;
 public class NoneColor extends ColorFunction {
 
 	public NoneColor() {
-		super(0, 0, RangeType.HUE);
+		super("unknown", 0, 0, RangeType.HUE);
 	}
 	
 	@Override

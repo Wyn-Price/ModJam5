@@ -27,7 +27,7 @@ import scala.util.control.Exception;
 public class ColorGreen extends ColorFunction {
 
 	public ColorGreen() {
-		super(WorldPaintConfig.COLOR_VALUES.greenMin, WorldPaintConfig.COLOR_VALUES.greenMax, RangeType.HUE);
+		super("green", WorldPaintConfig.COLOR_VALUES.greenMin, WorldPaintConfig.COLOR_VALUES.greenMax, RangeType.HUE);
 	}
 	
 	@Override

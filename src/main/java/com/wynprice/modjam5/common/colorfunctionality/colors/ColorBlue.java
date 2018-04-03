@@ -13,7 +13,7 @@ import net.minecraft.util.DamageSource;
 public class ColorBlue extends ColorFunction {
 
 	public ColorBlue() {
-		super(WorldPaintConfig.COLOR_VALUES.blueMin, WorldPaintConfig.COLOR_VALUES.blueMax, RangeType.HUE);
+		super("blue", WorldPaintConfig.COLOR_VALUES.blueMin, WorldPaintConfig.COLOR_VALUES.blueMax, RangeType.HUE);
 	}
 
 	@Override

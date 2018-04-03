@@ -27,7 +27,7 @@ import net.minecraft.world.storage.WorldInfo;
 public class ColorGray extends ColorFunction {
 
 	public ColorGray() {
-		super(0, 0, ColorFunction.RangeType.HUE);
+		super("gray", 0, 0, ColorFunction.RangeType.HUE);
 	}
 	
 	@Override

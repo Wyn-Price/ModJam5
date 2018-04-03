@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 public class ColorYellow extends ColorFunction {
 
 	public ColorYellow() {
-		super(WorldPaintConfig.COLOR_VALUES.yellowMin, WorldPaintConfig.COLOR_VALUES.yellowMax, RangeType.HUE);
+		super("yellow", WorldPaintConfig.COLOR_VALUES.yellowMin, WorldPaintConfig.COLOR_VALUES.yellowMax, RangeType.HUE);
 	}
 	
 	private static final UUID HEALTH_UUID = UUID.fromString("dc1683d6-1d1e-4b20-bc57-b594b899ffad");

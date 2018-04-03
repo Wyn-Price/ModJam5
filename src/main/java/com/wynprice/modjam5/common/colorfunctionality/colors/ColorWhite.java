@@ -12,7 +12,7 @@ import net.minecraft.potion.PotionEffect;
 public class ColorWhite extends ColorFunction {
 
 	public ColorWhite() {
-		super(0f, 0f, RangeType.HUE);
+		super("white", 0f, 0f, RangeType.HUE);
 	}
 	
 	@Override

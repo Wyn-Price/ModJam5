@@ -11,7 +11,7 @@ import net.minecraft.potion.PotionEffect;
 public class ColorPurple extends ColorFunction {
 
 	public ColorPurple() {
-		super(WorldPaintConfig.COLOR_VALUES.purpleMin, WorldPaintConfig.COLOR_VALUES.purpleMax, RangeType.HUE);
+		super("purple", WorldPaintConfig.COLOR_VALUES.purpleMin, WorldPaintConfig.COLOR_VALUES.purpleMax, RangeType.HUE);
 	}
 	
 	@Override
