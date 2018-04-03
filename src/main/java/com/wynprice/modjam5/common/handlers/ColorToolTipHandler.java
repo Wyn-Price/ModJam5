@@ -15,7 +15,7 @@ public class ColorToolTipHandler {
 	@SubscribeEvent
 	public static void onToolTip(ItemTooltipEvent event) {
 		if(event.getItemStack().getItem() instanceof IColorToolTip) {
-			event.getToolTip().add(1, new TextComponentTranslation("worldpaint.estimatedcolor", new TextComponentTranslation("worldpaint.color." + ColorUtils.findClosestPaletteColorTo(ColorUtils.getColor(event.getItemStack())).getColorName()).getUnformattedText()).getUnformattedText());
+			event.getToolTip().add(1, new TextComponentTranslation("worldpaint.estimatedcolor", new TextComponentTranslation("worldpaint.color." + ColorUtils.calculateClosestColor(ColorUtils.getColor(event.getItemStack())).getColorName()).getUnformattedText()).getUnformattedText());
 		}
 	}
 	

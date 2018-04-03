@@ -6,12 +6,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 import com.wynprice.modjam5.common.WorldColorsHandler;
-import com.wynprice.modjam5.common.WorldColorsHandler.CapabilityHandler.IDataInfomationProvider;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.network.WorldPaintNetwork;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSingleBlockUpdate;
 import com.wynprice.modjam5.common.network.packets.MessagePacketSyncChunk;
 import com.wynprice.modjam5.common.utils.BlockPosHelper;
+import com.wynprice.modjam5.common.utils.capability.CapabilityHandler;
+import com.wynprice.modjam5.common.utils.capability.CapabilityHandler.IDataInfomationProvider;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +49,7 @@ public class ItemPaintScrubber extends Item {
 				}
 			}
 		}
-		IDataInfomationProvider provider = worldIn.getChunkFromBlockCoords(pos).getCapability(WorldColorsHandler.CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP);
+		IDataInfomationProvider provider = worldIn.getChunkFromBlockCoords(pos).getCapability(CapabilityHandler.DATA_CAPABILITY, EnumFacing.UP);
 		if(!info.isDefault() && provider != null) {
 			if(info.isSpreadable()) {
 				List<Chunk> chunkList = Lists.newArrayList();

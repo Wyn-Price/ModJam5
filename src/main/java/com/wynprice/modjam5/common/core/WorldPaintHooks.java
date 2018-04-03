@@ -1,34 +1,25 @@
 package com.wynprice.modjam5.common.core;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import com.wynprice.modjam5.client.IWorldPaintColorResolver;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldPaintConfig;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.colorfunctionality.ColorBehaviourEventDispatcher;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 import com.wynprice.modjam5.common.utils.ColorUtils;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldPaintHooks {
 	
@@ -69,7 +60,7 @@ public class WorldPaintHooks {
 	public static float getBlockSlipperiness(Block block, IBlockState state, World world, BlockPos pos, Entity entity) {
 		DataInfomation info = WorldColorsHandler.getInfo(world, pos);
 		if(!info.isDefault() && WorldPaintConfig.GENERAL.getAllowedBlocks().contains(block)) {
-			if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
+			if(ColorUtils.calculateClosestColor(info.getColor()) == ColorFunctions.ORANGE && WorldPaintConfig.COLOR_FUNCTIONS.orangeSlippyBlocks) {
 				return entity instanceof EntityItem ? 1f : 1.05f;
 			}
 		}
@@ -85,7 +76,7 @@ public class WorldPaintHooks {
 				info = WorldColorsHandler.getInfo(worldIn, position);
 			}
 		}
-		if(ColorUtils.findClosestPaletteColorTo(info.getColor()) == ColorFunctions.BLUE && !entityIn.isSneaking() && WorldPaintConfig.COLOR_FUNCTIONS.blueBouncyBlocks) {
+		if(ColorUtils.calculateClosestColor(info.getColor()) == ColorFunctions.BLUE && !entityIn.isSneaking() && WorldPaintConfig.COLOR_FUNCTIONS.blueBouncyBlocks) {
 			entityIn.motionY = -entityIn.motionY * 0.9f;
 			return;
 		}

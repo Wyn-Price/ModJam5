@@ -1,20 +1,17 @@
 package com.wynprice.modjam5.common.network.packets;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wynprice.modjam5.common.WorldColorsHandler.CapabilityHandler;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
-import com.wynprice.modjam5.common.WorldColorsHandler.CapabilityHandler.IDataInfomationProvider;
 import com.wynprice.modjam5.common.network.MessagePacket;
 import com.wynprice.modjam5.common.utils.ByteBufHelper;
+import com.wynprice.modjam5.common.utils.capability.CapabilityHandler;
+import com.wynprice.modjam5.common.utils.capability.CapabilityHandler.IDataInfomationProvider;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;

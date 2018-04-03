@@ -11,7 +11,17 @@ import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Class used for centralized color calculations
+ * @author Wyn Price
+ *
+ */
 public class ColorUtils {
+	/**
+	 * Gets the color from the itemstack. Uses the vanilla method
+	 * @param stack The input stack
+	 * @return The color in the stack, or 0xFFFFFF (16777215) if it could not be found
+	 */
 	public static int getColor(ItemStack stack) {
 		NBTTagCompound nbttagcompound = stack.getTagCompound();
 
@@ -21,14 +31,19 @@ public class ColorUtils {
 
             if (nbttagcompound1 != null && nbttagcompound1.hasKey("color", 3))
             {
-                return nbttagcompound1.getInteger("color") & 0xFFFFFF
-;
+                return nbttagcompound1.getInteger("color") & 0xFFFFFF;
             }
         }
 
         return 16777215;
 	}
 
+	/**
+	 * Sets the color to the item stack, using the vanilla method
+	 * @param itemstack the itemstack
+	 * @param color the color
+	 * @return {@code itemstack}
+	 */
 	public static ItemStack setColor(ItemStack itemstack, int color) {
 		NBTTagCompound nbttagcompound = itemstack.getTagCompound();
 
@@ -50,7 +65,7 @@ public class ColorUtils {
         return itemstack;
 	}
 	
-	public static ColorFunction findClosestPaletteColorTo(int color) {
+	public static ColorFunction calculateClosestColor(int color) {
 		ArrayList<ColorFunction> acceptedFunction = new ArrayList<>();
 
 		for(ColorFunction function : ColorFunctions.ALL_FUNCTIONS) {

@@ -1,14 +1,11 @@
 package com.wynprice.modjam5.common.utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wynprice.modjam5.common.WorldColorsHandler.CapabilityHandler.IDataInfomationProvider;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
 public class ByteBufHelper {

@@ -2,27 +2,19 @@ package com.wynprice.modjam5.common.colorfunctionality.colors;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
-import com.sun.jna.platform.win32.WinUser.WNDENUMPROC;
-import com.wynprice.modjam5.WorldPaint;
 import com.wynprice.modjam5.common.WorldColorsHandler;
 import com.wynprice.modjam5.common.WorldPaintConfig;
-import com.wynprice.modjam5.common.WorldColorsHandler.DataInfomation;
 import com.wynprice.modjam5.common.colorfunctionality.ColorFunction;
-import com.wynprice.modjam5.common.colorfunctionality.ColorFunctions;
 import com.wynprice.modjam5.common.utils.ColorUtils;
+import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
 
 public class ColorGray extends ColorFunction {
 
@@ -41,7 +33,7 @@ public class ColorGray extends ColorFunction {
 			TileEntity entry = world.tickableTileEntities.get(i);
 			DataInfomation info = WorldColorsHandler.getInfo(world, entry.getPos().down());
 			if(!info.isDefault()) {
-				ColorFunction function = ColorUtils.findClosestPaletteColorTo(info.getColor());
+				ColorFunction function = ColorUtils.calculateClosestColor(info.getColor());
 				if(function == this && entry instanceof TileEntityFurnace && new Random().nextFloat() < WorldPaintConfig.COLOR_FUNCTIONS.grayFurnaceSmelt) { 
 					for(int i2 = 0; i2 < WorldPaintConfig.COLOR_FUNCTIONS.grayFurnaceAmount; i2++) {
 						((TileEntityFurnace) entry).update();
