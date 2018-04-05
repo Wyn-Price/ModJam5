@@ -9,13 +9,17 @@ import com.wynprice.modjam5.common.utils.capability.DataInfomation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class WorldPaintHooksClient {
-	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) { //Needed colorResolver to be string as the class is inaccessable
-		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
+	public static int getProperBiomeColor(int color, IBlockAccess blockAccess, BlockPos pos, IWorldPaintColorResolver resolver) {
+//		int type = Integer.valueOf(String.valueOf(resolver.toString().toCharArray()[43])); //1 = grass, 2 = foliage, 3 = water
+		boolean isWater = ObfuscationReflectionHelper.getPrivateValue(BiomeColorHelper.class, null, "WATER_COLOR", "field_180290_c") == resolver;
 		DataInfomation in = WorldColorsHandler.getInfo(Minecraft.getMinecraft().world, pos);
 		if(in != null && !in.isDefault() && !in.isSpreadable()) {
 			return in.getColor();
@@ -34,7 +38,7 @@ public class WorldPaintHooksClient {
 			if(info == null) info = DataInfomation.DEFAULT;
 			if(!info.isDefault()) {
 				l = info.getColor();
-			} else if(type == 3) {
+			} else if(isWater) {
 				if(l != 0xFFFFFF) {
 					float r1 = ((l >> 16) & 0xFF) / 255f;
 					float g1 = ((l >> 8) & 0xFF) / 255f;
