@@ -21,7 +21,7 @@ Crafting:<br>
 ## Painting boots
 Wear these and wherever you walk, the color they're dyed will spread. This also means while wearing them, the color of which they have will be applied to the player<br>
 Crafting:<br> 
-<img src="https://imgur.com/TrA97lM.png"></img>
+<img src="https://imgur.com/bMe0vtU.png"></img>
 ## Color Picker
 The color picker is used to pick a color, and then can be crafted with items to color them the right color. To open up the GUI, right click the color picker. You then can click and move the point in the color wheel, and the saturation slider at the bottem. The color result will be rendered onto the item on the left. To exit the GUI, press escape. <br>
 The Color Picker also can be used to color these items:
