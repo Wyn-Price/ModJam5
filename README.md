@@ -1,5 +1,6 @@
 # ModJam 2008.1 Entry - World Paint - By Wyn Price
 World Paint is a mod made for Modjam. It makes the world "paintable", with the diffrent colors having diffrent effects. The list of effects can be found [here](https://github.com/Wyn-Price/ModJam5/blob/master/README.md#color-functionalities)<br>
+Paint will also spread on the worlds random ticks<br>
 <h3>Link to curseforge project here <a href="https://minecraft.curseforge.com/projects/world-paint/files/2548338">here</a></h3>
 
 # Items
